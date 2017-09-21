@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using OcenUczelnie.Core.Domains;
+using OcenUczelnie.Core.Domain;
 
 namespace OcenUczelnie.Core.Repositories
 {
-    public interface IUserRepository
+    public interface IUserRepository: IRepository
     {
-        //CRUD
         void Add(User user);
         void Remove(User user);
         void Update(User user);

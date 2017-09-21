@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OcenUczelnie.Core.Domains
+namespace OcenUczelnie.Core.Domain
 {
     public class Univeristy
     {

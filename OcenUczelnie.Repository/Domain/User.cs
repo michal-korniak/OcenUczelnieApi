@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace OcenUczelnie.Core.Domains
+namespace OcenUczelnie.Core.Domain
 {
     public class User
     {
@@ -13,8 +12,5 @@ namespace OcenUczelnie.Core.Domains
         public string Salt { get; set; }
         public string Role { get; set; }
         public IEnumerable<Review> Reviews { get; set; }
-
-
-
     }
 }

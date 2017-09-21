@@ -3,17 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using OcenUczelnie.Core.Repositories;
+using OcenUczelnie.Infrastructure.IoC;
+using OcenUczelnie.Infrastructure.Settings;
 
 namespace OcenUczelnie.Api.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+
+        private readonly IConfiguration _config;
+        private readonly SqlSettings _sqlSettings;
+        private readonly IUserRepository _userRepository;
+
         // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        public ValuesController(IConfiguration config, SqlSettings sqlSettings, IUserRepository userRepository)
         {
-            return new string[] { "val1", "value2" };
+            _config = config;
+            _sqlSettings = sqlSettings;
+            _userRepository = userRepository;
+        }
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Json(_userRepository.BrowseAll());
         }
 
         // GET api/values/5
