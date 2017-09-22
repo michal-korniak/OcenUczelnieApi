@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using OcenUczelnie.Core.Repositories;
 using OcenUczelnie.Infrastructure.IoC;
+using OcenUczelnie.Infrastructure.Services;
 using OcenUczelnie.Infrastructure.Settings;
 
 namespace OcenUczelnie.Api.Controllers
@@ -13,47 +14,24 @@ namespace OcenUczelnie.Api.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private readonly IUserService _userService;
 
-        private readonly IConfiguration _config;
-        private readonly SqlSettings _sqlSettings;
-        private readonly IUserRepository _userRepository;
 
         // GET api/values
-        public ValuesController(IConfiguration config, SqlSettings sqlSettings, IUserRepository userRepository)
+        public ValuesController(IUserService userService)
         {
-            _config = config;
-            _sqlSettings = sqlSettings;
-            _userRepository = userRepository;
+            _userService = userService;
         }
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Json(_userRepository.BrowseAll());
+            return Json(await _userService.BrowseAll());
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Json(await _userService.Get(id));
         }
     }
 }

@@ -11,6 +11,20 @@ namespace OcenUczelnie.Core.Domain
         public string Password { get; set; }
         public string Salt { get; set; }
         public string Role { get; set; }
-        public IEnumerable<Review> Reviews { get; set; }
+
+        public User(Guid id, string email, string name, string password, string salt, string role)
+        {
+            Id = id;
+            Email = email;
+            Name = name;
+            Password = password;
+            Salt = salt;
+            Role = role;
+        }
+
+        protected User()
+        {
+            
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using OcenUczelnie.Core.Domain;
 using OcenUczelnie.Core.Repositories;
 using OcenUczelnie.Infrastructure.EF;
@@ -16,32 +18,32 @@ namespace OcenUczelnie.Infrastructure.Repositories
             _context = context;
         }
 
-        public void Add(User user)
+        public async Task AddAsync(User user)
         {
             _context.Users.Add(user);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(User user)
+        public async Task RemoveAsync(User user)
         {
             _context.Users.Remove(user);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(User user)
+        public async Task UpdateAsync(User user)
         {
             _context.Users.Update(user);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
-        public User Get(Guid id)
+        public async Task<User> GetAsync(Guid id)
         {
-            return _context.Users.SingleOrDefault(x => x.Id == id);
+            return await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public IEnumerable<User> BrowseAll()
+        public async Task<IEnumerable<User>> BrowseAllAsync()
         {
-            return _context.Users.ToList();
+            return await _context.Users.ToListAsync();
         }
     }
 }

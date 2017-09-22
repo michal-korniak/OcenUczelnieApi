@@ -20,6 +20,10 @@ namespace OcenUczelnie.Infrastructure.IoC
             builder.RegisterInstance(_config.GetSettings<SqlSettings>())
                 .AsSelf()
                 .SingleInstance();
+
+            builder.RegisterInstance(_config.GetSettings<GeneralSettings>())
+                .AsSelf()
+                .SingleInstance();
         }
     }
 }
