@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Autofac;
 using OcenUczelnie.Infrastructure.Services;
+using SimpleCrypto;
 
 namespace OcenUczelnie.Infrastructure.IoC
 {
@@ -14,6 +15,9 @@ namespace OcenUczelnie.Infrastructure.IoC
                 .AssignableTo<IService>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<PBKDF2>()
+                .As<ICryptoService>();
         }
     }
 }

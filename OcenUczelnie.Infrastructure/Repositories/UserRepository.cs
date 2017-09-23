@@ -20,7 +20,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task AddAsync(User user)
         {
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
         }
 
@@ -36,9 +36,18 @@ namespace OcenUczelnie.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User> GetAsync(Guid id)
+        public async Task<User> GetByIdAsync(Guid id)
         {
             return await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Email==email);
+        }
+        public async Task<User> GetByNameAsync(string name)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Name == name);
         }
 
         public async Task<IEnumerable<User>> BrowseAllAsync()

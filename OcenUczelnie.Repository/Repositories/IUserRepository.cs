@@ -11,7 +11,9 @@ namespace OcenUczelnie.Core.Repositories
         Task AddAsync(User user);
         Task RemoveAsync(User user);
         Task UpdateAsync(User user);
-        Task<User> GetAsync(Guid id);
+        Task<User> GetByIdAsync(Guid id);
+        Task<User> GetByEmailAsync(string email);
+        Task<User> GetByNameAsync(string name);
         Task<IEnumerable<User>> BrowseAllAsync();
     }
 }

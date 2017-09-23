@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -40,12 +38,7 @@ namespace OcenUczelnie.Api
             services.AddSingleton(AutoMapperConfig.Initialize());
             var connectionString = Configuration.GetSettings<SqlSettings>().ConnectionString;
             services.AddDbContext<OcenUczelnieContext>(opt => opt.UseSqlServer(connectionString));
-
-            var config = new AutoMapper.MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new AutoMapperProfile());
-            });
-
+            services.AddMemoryCache();
             var builder = new ContainerBuilder();
             builder.Populate(services);
             builder.RegisterModule(new SettingsModule(Configuration));
