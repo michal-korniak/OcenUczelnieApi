@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +11,8 @@ using OcenUczelnie.Infrastructure.Command;
 
 namespace OcenUczelnie.Api.Controllers
 {
-    [Route("[controller]")]
-    public class UserController : Controller
+ 
+    public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
         private readonly IMemoryCache _memoryCache;
@@ -20,13 +22,11 @@ namespace OcenUczelnie.Api.Controllers
             _userService = userService;
             _memoryCache = memoryCache;
         }
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             return Json(await _userService.BrowseAll());
         }
-        
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -46,6 +46,25 @@ namespace OcenUczelnie.Api.Controllers
             var token = _memoryCache.Get("generatedToken");
             return Json(token);
         }
+        [HttpPut("update")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromBody]UpdateUser updateUser)
+        {
+            var id = GetCurrentUserId();
+            await _userService.Update(id, updateUser.Email, updateUser.Name, updateUser.Password);
+            return Ok();
+        }
+
+        [HttpGet("change_role")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> ChangeRole([FromBody]ChangeRole changeRole)
+        {
+            await _userService.ChangeRole(changeRole.UserId, changeRole.Role);
+            return Ok();
+        }
+        
+
+
 
     }
 }

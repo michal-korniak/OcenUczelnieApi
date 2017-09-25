@@ -9,7 +9,7 @@ namespace OcenUczelnie.Core.Repositories
     public interface IUserRepository: IRepository
     {
         Task AddAsync(User user);
-        Task RemoveAsync(User user);
+        Task RemoveAsync(Guid id);
         Task UpdateAsync(User user);
         Task<User> GetByIdAsync(Guid id);
         Task<User> GetByEmailAsync(string email);

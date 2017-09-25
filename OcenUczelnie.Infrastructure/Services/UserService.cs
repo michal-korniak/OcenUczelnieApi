@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,15 +10,16 @@ using SimpleCrypto;
 
 namespace OcenUczelnie.Infrastructure.Services
 {
-    class UserService : IUserService
+    public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
         private readonly ICryptoService _cryptoService;
+        private readonly IMapper _mapper;
         private readonly IMemoryCache _memoryCache;
         private readonly ITokenProvider _tokenProvider;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, ICryptoService cryptoService, IMemoryCache memoryCache, ITokenProvider tokenProvider)
+        public UserService(IUserRepository userRepository, IMapper mapper, ICryptoService cryptoService,
+            IMemoryCache memoryCache, ITokenProvider tokenProvider)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -27,9 +27,10 @@ namespace OcenUczelnie.Infrastructure.Services
             _memoryCache = memoryCache;
             _tokenProvider = tokenProvider;
         }
+
         public async Task<UserDto> Get(Guid id)
         {
-            var user=await _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id);
             return _mapper.Map<User, UserDto>(user);
         }
 
@@ -41,7 +42,7 @@ namespace OcenUczelnie.Infrastructure.Services
 
         public async Task RegisterAsync(string email, string name, string password, string role)
         {
-            if (await _userRepository.GetByEmailAsync(email)!=null)
+            if (await _userRepository.GetByEmailAsync(email) != null)
                 throw new Exception("User with this email already exist.");
             if (await _userRepository.GetByNameAsync(name) != null)
                 throw new Exception("User with this name already exist.");
@@ -51,8 +52,7 @@ namespace OcenUczelnie.Infrastructure.Services
             var user = new User(Guid.NewGuid(), email, name,
                 hashPassword, salt, "user");
             await _userRepository.AddAsync(user);
-            _memoryCache.Set("registeredUserId", user.Id,TimeSpan.FromSeconds(5));
-
+            _memoryCache.Set("registeredUserId", user.Id, TimeSpan.FromSeconds(5));
         }
 
         public async Task LoginAsync(string email, string password)
@@ -60,16 +60,34 @@ namespace OcenUczelnie.Infrastructure.Services
             var user = await _userRepository.GetByEmailAsync(email);
             if (user == null)
                 throw new Exception("Invalid credentials");
-            string generatedHash = _cryptoService.Compute(password, user.Salt);
-            if(!_cryptoService.Compare(generatedHash,user.Password))
+            var generatedHash = _cryptoService.Compute(password, user.Salt);
+            if (!_cryptoService.Compare(generatedHash, user.Password))
                 throw new Exception("Invalid credentials");
             var token = _tokenProvider.CreateToken(user.Id, user.Role);
             _memoryCache.Set("generatedToken", token, TimeSpan.FromSeconds(5));
+        }
 
+        public async Task Update(Guid id, string email, string name, string password)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (email != null)
+                user.Email = email;
+            if (name != null)
+                user.Name = name;
+            if (password != null)
+            {
+                user.Salt = _cryptoService.GenerateSalt();
+                user.Password = _cryptoService.Compute(password, user.Salt);
+            }
 
+            await _userRepository.UpdateAsync(user);
+        }
 
-
-
+        public async Task ChangeRole(Guid id, string role)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            user.Role = role;
+            await _userRepository.UpdateAsync(user);
         }
     }
 }

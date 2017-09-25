@@ -22,7 +22,7 @@ namespace OcenUczelnie.Infrastructure.Services
             var creds = new SigningCredentials(symetricKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(ClaimTypes.Role,role)
             };
             var token = new JwtSecurityToken(

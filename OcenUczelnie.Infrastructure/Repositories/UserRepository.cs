@@ -24,9 +24,12 @@ namespace OcenUczelnie.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(User user)
+        public async Task RemoveAsync(Guid id)
         {
-            _context.Users.Remove(user);
+            var user = await GetByIdAsync(id);
+            if (user == null)
+                return;
+            _context.Remove(user);
             await _context.SaveChangesAsync();
         }
 
