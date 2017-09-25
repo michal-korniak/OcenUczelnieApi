@@ -17,13 +17,15 @@ namespace OcenUczelnie.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly ICryptoService _cryptoService;
         private readonly IMemoryCache _memoryCache;
+        private readonly ITokenProvider _tokenProvider;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, ICryptoService cryptoService, IMemoryCache memoryCache)
+        public UserService(IUserRepository userRepository, IMapper mapper, ICryptoService cryptoService, IMemoryCache memoryCache, ITokenProvider tokenProvider)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _cryptoService = cryptoService;
             _memoryCache = memoryCache;
+            _tokenProvider = tokenProvider;
         }
         public async Task<UserDto> Get(Guid id)
         {
@@ -50,6 +52,23 @@ namespace OcenUczelnie.Infrastructure.Services
                 hashPassword, salt, "user");
             await _userRepository.AddAsync(user);
             _memoryCache.Set("registeredUserId", user.Id,TimeSpan.FromSeconds(5));
+
+        }
+
+        public async Task LoginAsync(string email, string password)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+                throw new Exception("Invalid credentials");
+            string generatedHash = _cryptoService.Compute(password, user.Salt);
+            if(!_cryptoService.Compare(generatedHash,user.Password))
+                throw new Exception("Invalid credentials");
+            var token = _tokenProvider.CreateToken(user.Id, user.Role);
+            _memoryCache.Set("generatedToken", token, TimeSpan.FromSeconds(5));
+
+
+
+
 
         }
     }

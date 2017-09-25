@@ -12,5 +12,6 @@ namespace OcenUczelnie.Infrastructure.Services
         Task<UserDto> Get(Guid id);
         Task<IEnumerable<UserDto>> BrowseAll();
         Task RegisterAsync(string email, string name, string password, string role);
+        Task LoginAsync(string email, string password);
     }
 }

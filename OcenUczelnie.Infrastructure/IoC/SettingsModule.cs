@@ -24,6 +24,9 @@ namespace OcenUczelnie.Infrastructure.IoC
             builder.RegisterInstance(_config.GetSettings<GeneralSettings>())
                 .AsSelf()
                 .SingleInstance();
+            builder.RegisterInstance(_config.GetSettings<JwtSettings>())
+                .AsSelf()
+                .SingleInstance();
         }
     }
 }

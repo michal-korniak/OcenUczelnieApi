@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
-using OcenUczelnie.Core.Domain;
-using OcenUczelnie.Core.Repositories;
-using OcenUczelnie.Infrastructure.IoC;
 using OcenUczelnie.Infrastructure.Services;
 using OcenUczelnie.Infrastructure.Command;
-using SimpleCrypto;
 
 namespace OcenUczelnie.Api.Controllers
 {
@@ -25,24 +20,32 @@ namespace OcenUczelnie.Api.Controllers
             _userService = userService;
             _memoryCache = memoryCache;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             return Json(await _userService.BrowseAll());
         }
-
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
             return Json(await _userService.Get(id));
         }
-
-        public async Task<IActionResult> Post([FromBody]CreateUser createUser)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]CreateUser createUser)
         {
             await _userService.RegisterAsync(createUser.Email, createUser.Name, createUser.Password, "user");
             var id=_memoryCache.Get<Guid>("registeredUserId");
             return Created($"user/{id}", null);
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody]LoginUser loginUser)
+        {
+            await _userService.LoginAsync(loginUser.Email, loginUser.Password);
+            var token = _memoryCache.Get("generatedToken");
+            return Json(token);
+        }
+
     }
 }

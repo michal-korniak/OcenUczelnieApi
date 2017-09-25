@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using OcenUczelnie.Infrastructure.EF;
 using OcenUczelnie.Infrastructure.Extensions;
@@ -39,6 +43,23 @@ namespace OcenUczelnie.Api
             var connectionString = Configuration.GetSettings<SqlSettings>().ConnectionString;
             services.AddDbContext<OcenUczelnieContext>(opt => opt.UseSqlServer(connectionString));
             services.AddMemoryCache();
+            var jwtSettings = Configuration.GetSettings<JwtSettings>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+                };
+            });
+
+
             var builder = new ContainerBuilder();
             builder.Populate(services);
             builder.RegisterModule(new SettingsModule(Configuration));
@@ -61,7 +82,8 @@ namespace OcenUczelnie.Api
                 dataInitializer.SeedAsync();
 
             }
-            app.UseMvc();
+            app.UseAuthentication() //without this line, api always returns 401 even if token is valid
+                .UseMvc();
             appLifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());
 
 
