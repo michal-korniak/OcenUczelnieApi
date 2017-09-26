@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
 
-namespace OcenUczelnie.Infrastructure.Services
+namespace OcenUczelnie.Infrastructure.Services.Interfaces
 {
     public interface ITokenProvider: IService
     {

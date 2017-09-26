@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Autofac;
 using OcenUczelnie.Infrastructure.Services;
+using OcenUczelnie.Infrastructure.Services.Interfaces;
 using SimpleCrypto;
 
 namespace OcenUczelnie.Infrastructure.IoC

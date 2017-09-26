@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using OcenUczelnie.Infrastructure.Services.Interfaces;
 using OcenUczelnie.Infrastructure.Settings;
 
 namespace OcenUczelnie.Infrastructure.Services

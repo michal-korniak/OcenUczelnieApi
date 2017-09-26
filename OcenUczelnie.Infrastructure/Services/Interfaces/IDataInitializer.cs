@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace OcenUczelnie.Infrastructure.Services
+namespace OcenUczelnie.Infrastructure.Services.Interfaces
 {
     public interface IDataInitializer: IService
     {

@@ -8,10 +8,11 @@ namespace OcenUczelnie.Core.Repositories
 {
     public interface IUniversityRepository: IRepository
     {
-        Task AddAsync(Univeristy univeristy);
+        Task AddAsync(University university);
         Task RemoveAsync(Guid id);
-        Task UpdateAsync(Univeristy univeristy);
-        Task<Univeristy> GetByIdAsync(Guid id);
-        Task<IEnumerable<Univeristy>> BrowseAllAsync();
+        Task UpdateAsync(University university);
+        Task<University> GetByIdAsync(Guid id);
+        Task<University> GetByNameAsync(string name);
+        Task<IEnumerable<University>> BrowseAllAsync();
     }
 }

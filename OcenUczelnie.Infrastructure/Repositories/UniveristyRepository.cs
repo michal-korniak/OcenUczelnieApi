@@ -17,9 +17,9 @@ namespace OcenUczelnie.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(Univeristy univeristy)
+        public async Task AddAsync(University university)
         {
-            await _context.Universities.AddAsync(univeristy);
+            await _context.Universities.AddAsync(university);
             await _context.SaveChangesAsync();
 
         }
@@ -33,16 +33,19 @@ namespace OcenUczelnie.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Univeristy univeristy)
+        public async Task UpdateAsync(University university)
         {
-            _context.Update(univeristy);
+            _context.Update(university);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Univeristy> GetByIdAsync(Guid id)
+        public async Task<University> GetByIdAsync(Guid id)
             => await _context.Universities.SingleOrDefaultAsync(u => u.Id == id);
 
-        public async Task<IEnumerable<Univeristy>> BrowseAllAsync()
+        public async Task<University> GetByNameAsync(string name)
+            => await _context.Universities.SingleOrDefaultAsync(u => u.Name == name);
+
+        public async Task<IEnumerable<University>> BrowseAllAsync()
             => await _context.Universities.ToListAsync();
     }
 }

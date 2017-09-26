@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using OcenUczelnie.Infrastructure.Services;
 using OcenUczelnie.Infrastructure.Command;
+using OcenUczelnie.Infrastructure.Services.Interfaces;
 
 namespace OcenUczelnie.Api.Controllers
 {
@@ -25,12 +26,12 @@ namespace OcenUczelnie.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Json(await _userService.BrowseAll());
+            return Json(await _userService.BrowseAllAsync());
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            return Json(await _userService.Get(id));
+            return Json(await _userService.GetAsync(id));
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]CreateUser createUser)
@@ -51,7 +52,7 @@ namespace OcenUczelnie.Api.Controllers
         public async Task<IActionResult> Update([FromBody]UpdateUser updateUser)
         {
             var id = GetCurrentUserId();
-            await _userService.Update(id, updateUser.Email, updateUser.Name, updateUser.Password);
+            await _userService.UpdateAsync(id, updateUser.Email, updateUser.Name, updateUser.Password);
             return Ok();
         }
 
@@ -59,7 +60,7 @@ namespace OcenUczelnie.Api.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> ChangeRole([FromBody]ChangeRole changeRole)
         {
-            await _userService.ChangeRole(changeRole.UserId, changeRole.Role);
+            await _userService.ChangeRoleAsync(changeRole.UserId, changeRole.Role);
             return Ok();
         }
         

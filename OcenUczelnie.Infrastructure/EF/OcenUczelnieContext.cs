@@ -8,7 +8,9 @@ namespace OcenUczelnie.Infrastructure.EF
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
-        public virtual DbSet<Univeristy> Universities { get; set; }
+        public virtual DbSet<University> Universities { get; set; }
+        public virtual DbSet<Course> Courses { get; set; }
+
 
 
         public OcenUczelnieContext(DbContextOptions options) : base(options)

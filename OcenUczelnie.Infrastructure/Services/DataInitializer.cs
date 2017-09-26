@@ -4,25 +4,30 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using OcenUczelnie.Core.Domain;
 using OcenUczelnie.Core.Repositories;
+using OcenUczelnie.Infrastructure.Services.Interfaces;
 
 namespace OcenUczelnie.Infrastructure.Services
 {
     public class DataInitializer: IDataInitializer
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public DataInitializer(IUserRepository userRepository)
+
+        public DataInitializer(IUserService userService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
         }
         public async Task SeedAsync()
         {
-            if ((await _userRepository.BrowseAllAsync()).Any())
+            if ((await _userService.BrowseAllAsync()).Any())
                 return;
-            for (int i = 0; i < 5; ++i)
+            for (int i = 1; i <= 5; ++i)
             {
-                var user = new User(Guid.NewGuid(), $"test{i}@mail.com", $"test{i}", "secret", "salt", "user");
-                await _userRepository.AddAsync(user);
+                await _userService.RegisterAsync($"user{i}@test.com", $"user{i}", "secret","user");
+            }
+            for (int i = 1; i <= 2; ++i)
+            {
+                await _userService.RegisterAsync($"admin{i}@test.com", $"admin{i}", "secret", "user");
             }
 
         }

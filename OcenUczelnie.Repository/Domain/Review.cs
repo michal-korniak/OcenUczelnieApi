@@ -6,9 +6,8 @@ namespace OcenUczelnie.Core.Domain
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public Guid UniversityId { get; set; }
-        public string Course { get; set; }
-        public int Mark { get; set; }
+        public Guid CourseId { get; set; }
+        public int Rating { get; set; }
         public string Content { get; set; }
 
     }

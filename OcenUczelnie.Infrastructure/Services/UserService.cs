@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using OcenUczelnie.Core.Domain;
 using OcenUczelnie.Core.Repositories;
 using OcenUczelnie.Infrastructure.DTO;
+using OcenUczelnie.Infrastructure.Services.Interfaces;
 using SimpleCrypto;
 
 namespace OcenUczelnie.Infrastructure.Services
@@ -28,13 +29,13 @@ namespace OcenUczelnie.Infrastructure.Services
             _tokenProvider = tokenProvider;
         }
 
-        public async Task<UserDto> Get(Guid id)
+        public async Task<UserDto> GetAsync(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id);
             return _mapper.Map<User, UserDto>(user);
         }
 
-        public async Task<IEnumerable<UserDto>> BrowseAll()
+        public async Task<IEnumerable<UserDto>> BrowseAllAsync()
         {
             var users = await _userRepository.BrowseAllAsync();
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
@@ -67,7 +68,7 @@ namespace OcenUczelnie.Infrastructure.Services
             _memoryCache.Set("generatedToken", token, TimeSpan.FromSeconds(5));
         }
 
-        public async Task Update(Guid id, string email, string name, string password)
+        public async Task UpdateAsync(Guid id, string email, string name, string password)
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (email != null)
@@ -83,7 +84,7 @@ namespace OcenUczelnie.Infrastructure.Services
             await _userRepository.UpdateAsync(user);
         }
 
-        public async Task ChangeRole(Guid id, string role)
+        public async Task ChangeRoleAsync(Guid id, string role)
         {
             var user = await _userRepository.GetByIdAsync(id);
             user.Role = role;

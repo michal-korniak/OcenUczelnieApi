@@ -16,6 +16,7 @@ using OcenUczelnie.Infrastructure.Extensions;
 using OcenUczelnie.Infrastructure.IoC;
 using OcenUczelnie.Infrastructure.Mappers;
 using OcenUczelnie.Infrastructure.Services;
+using OcenUczelnie.Infrastructure.Services.Interfaces;
 using OcenUczelnie.Infrastructure.Settings;
 
 namespace OcenUczelnie.Api

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OcenUczelnie.Infrastructure.DTO;
 
-namespace OcenUczelnie.Infrastructure.Services
+namespace OcenUczelnie.Infrastructure.Services.Interfaces
 {
     public interface IUserService: IService
     {
-        Task<UserDto> Get(Guid id);
-        Task<IEnumerable<UserDto>> BrowseAll();
+        Task<UserDto> GetAsync(Guid id);
+        Task<IEnumerable<UserDto>> BrowseAllAsync();
         Task RegisterAsync(string email, string name, string password, string role);
         Task LoginAsync(string email, string password);
-        Task Update(Guid id,string email, string name, string password);
-        Task ChangeRole(Guid id, string role);
+        Task UpdateAsync(Guid id,string email, string name, string password);
+        Task ChangeRoleAsync(Guid id, string role);
     }
 }
