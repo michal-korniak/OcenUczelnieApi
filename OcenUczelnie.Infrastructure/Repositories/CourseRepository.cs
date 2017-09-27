@@ -9,11 +9,11 @@ using OcenUczelnie.Infrastructure.EF;
 
 namespace OcenUczelnie.Infrastructure.Repositories
 {
-    public class CoursesRepository: ICourseRepository
+    public class CourseRepository: ICourseRepository
     {
         private readonly OcenUczelnieContext _context;
 
-        public CoursesRepository(OcenUczelnieContext context)
+        public CourseRepository(OcenUczelnieContext context)
         {
             _context = context;
         }

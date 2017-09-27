@@ -12,10 +12,12 @@ namespace OcenUczelnie.Api.Controllers
     public class UniversityController : BaseApiController
     {
         private readonly IUniversityService _universityService;
+        private readonly ICourseService _courseService;
 
-        public UniversityController(IUniversityService universityService)
+        public UniversityController(IUniversityService universityService, ICourseService courseService)
         {
             _universityService = universityService;
+            _courseService = courseService;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -34,7 +36,7 @@ namespace OcenUczelnie.Api.Controllers
         [HttpGet("{id}/courses")]
         public async Task<IActionResult> GetCourses(Guid id)
         {
-            var courses = await _universityService.BrowseCoursesAsync(id);
+            var courses = await _courseService.BrowseUniversityCoursesAsync(id);
             return Json(courses);
         }
     }

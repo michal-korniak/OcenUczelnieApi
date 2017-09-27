@@ -63,9 +63,5 @@ namespace OcenUczelnie.Api.Controllers
             await _userService.ChangeRoleAsync(changeRole.UserId, changeRole.Role);
             return Ok();
         }
-        
-
-
-
     }
 }

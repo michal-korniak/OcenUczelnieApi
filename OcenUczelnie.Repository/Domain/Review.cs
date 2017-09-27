@@ -10,5 +10,18 @@ namespace OcenUczelnie.Core.Domain
         public int Rating { get; set; }
         public string Content { get; set; }
 
+        public Review(Guid id, Guid userId, Guid courseId, int rating, string content)
+        {
+            Id = id;
+            UserId = userId;
+            CourseId = courseId;
+            Rating = rating;
+            Content = content;
+        }
+
+        protected Review()
+        {
+            
+        }
     }
 }

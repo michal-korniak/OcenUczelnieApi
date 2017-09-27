@@ -11,14 +11,12 @@ namespace OcenUczelnie.Infrastructure.Services
 {
     class UniversityService : IUniversityService
     {
-        private readonly ICourseRepository _courseRepository;
         private readonly IMapper _mapper;
         private readonly IUniversityRepository _universityRepository;
 
         public UniversityService(IUniversityRepository universityRepository,
-            ICourseRepository courseRepository, IMapper mapper)
+            IMapper mapper)
         {
-            _courseRepository = courseRepository;
             _mapper = mapper;
             _universityRepository = universityRepository;
         }
@@ -41,13 +39,6 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var universites =await _universityRepository.BrowseAllAsync();
             return _mapper.Map<IEnumerable<University>, IEnumerable<UniversityDto>>(universites);
-
-        }
-
-        public async Task<IEnumerable<CourseDto>> BrowseCoursesAsync(Guid id)
-        {
-            var courses=await _courseRepository.BrowseUniversityCoursesAsync(id);
-            return _mapper.Map<IEnumerable<Course>, IEnumerable<CourseDto>>(courses);
         }
     }
 }

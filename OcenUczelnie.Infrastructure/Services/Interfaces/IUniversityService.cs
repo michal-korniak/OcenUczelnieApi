@@ -10,6 +10,5 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
         Task AddAsync(string name, string place);
         Task<UniversityDto> Get(Guid id);
         Task<IEnumerable<UniversityDto>> BrowseAllAsync();
-        Task<IEnumerable<CourseDto>> BrowseCoursesAsync(Guid id);
     }
 }
