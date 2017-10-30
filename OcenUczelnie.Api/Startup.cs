@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -15,6 +14,7 @@ using OcenUczelnie.Infrastructure.EF;
 using OcenUczelnie.Infrastructure.Extensions;
 using OcenUczelnie.Infrastructure.IoC;
 using OcenUczelnie.Infrastructure.Mappers;
+using OcenUczelnie.Infrastructure.Middleware;
 using OcenUczelnie.Infrastructure.Services;
 using OcenUczelnie.Infrastructure.Services.Interfaces;
 using OcenUczelnie.Infrastructure.Settings;
@@ -34,6 +34,7 @@ namespace OcenUczelnie.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
 
             services.AddMvc()
             .AddJsonOptions(options =>
@@ -83,7 +84,9 @@ namespace OcenUczelnie.Api
                 dataInitializer.SeedAsync();
 
             }
+            app.UseCors(options => options.WithOrigins("http://localhost:9000"));
             app.UseAuthentication() //without this line, api always returns 401 even if token is valid
+                .UseMiddleware(typeof(ExceptionMiddleware))
                 .UseMvc();
             appLifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());
 
