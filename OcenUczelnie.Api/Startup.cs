@@ -84,7 +84,7 @@ namespace OcenUczelnie.Api
                 dataInitializer.SeedAsync();
 
             }
-            app.UseCors(options => options.WithOrigins("http://localhost:9000"));
+            app.UseCors(options => options.WithOrigins("http://localhost:9000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseAuthentication() //without this line, api always returns 401 even if token is valid
                 .UseMiddleware(typeof(ExceptionMiddleware))
                 .UseMvc();
