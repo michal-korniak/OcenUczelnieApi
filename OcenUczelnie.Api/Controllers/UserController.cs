@@ -24,15 +24,18 @@ namespace OcenUczelnie.Api.Controllers
             _userService = userService;
             _memoryCache = memoryCache;
         }
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("browseAll")]
+        public async Task<IActionResult> BrowseAll()
         {
             return Json(await _userService.BrowseAllAsync());
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        [HttpGet("details")]
+        [Authorize]
+        public async Task<IActionResult> UserDetails()
         {
-            return Json(await _userService.GetAsync(id));
+            var id = GetCurrentUserId();
+            var user = await _userService.GetAsync(id);
+            return Json(user);
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]CreateUser createUser)

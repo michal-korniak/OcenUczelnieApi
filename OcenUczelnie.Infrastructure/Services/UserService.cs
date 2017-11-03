@@ -49,7 +49,7 @@ namespace OcenUczelnie.Infrastructure.Services
                 throw new Exception("User with this name already exist.");
 
             var salt = _cryptoService.GenerateSalt();
-            var hashPassword = _cryptoService.Compute(password, salt);
+            var hashPassword = ComputeHash(password, salt);
             var user = new User(Guid.NewGuid(), email, name,
                 hashPassword, salt, "user");
             await _userRepository.AddAsync(user);
@@ -77,8 +77,10 @@ namespace OcenUczelnie.Infrastructure.Services
                 user.Name = name;
             if (password != null)
             {
-                user.Salt = _cryptoService.GenerateSalt();
-                user.Password = _cryptoService.Compute(password, user.Salt);
+                var newSalt = _cryptoService.GenerateSalt();
+                var newPass = ComputeHash(password, user.Salt);
+                user.Salt = newSalt;
+                user.Password = newPass;
             }
 
             await _userRepository.UpdateAsync(user);
@@ -89,6 +91,14 @@ namespace OcenUczelnie.Infrastructure.Services
             var user = await _userRepository.GetByIdAsync(id);
             user.Role = role;
             await _userRepository.UpdateAsync(user);
+        }
+
+        private string ComputeHash(string password, string salt)
+        {
+            if(password.Length<7)
+                throw new Exception("Password should contain at least six characters.");
+            return _cryptoService.Compute(password, salt);
+
         }
     }
 }

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using OcenUczelnie.Infrastructure.Extensions;
 using OcenUczelnie.Infrastructure.Services.Interfaces;
+using OcenUczelnie.Infrastructure.Services.Models;
 using OcenUczelnie.Infrastructure.Settings;
 
 namespace OcenUczelnie.Infrastructure.Services
@@ -17,7 +19,7 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             _jwtSettings = jwtSettings;
         }
-        public string CreateToken(Guid userId, string role)
+        public TokenModel CreateToken(Guid userId, string role)
         {
             var symetricKey =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var creds = new SigningCredentials(symetricKey, SecurityAlgorithms.HmacSha256);
@@ -26,14 +28,20 @@ namespace OcenUczelnie.Infrastructure.Services
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(ClaimTypes.Role,role)
             };
+            DateTime expires = DateTime.UtcNow.AddMinutes(15);
             var token = new JwtSecurityToken(
                 issuer:_jwtSettings.Issuer,
                 claims:claims,
-                expires:DateTime.UtcNow.AddMinutes(15),
+                expires:expires,
                 signingCredentials:creds,
                 notBefore:DateTime.UtcNow
             );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new TokenModel()
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Role = role,
+                Expires=expires.ToTimestamp()
+            };
 
         }
     }

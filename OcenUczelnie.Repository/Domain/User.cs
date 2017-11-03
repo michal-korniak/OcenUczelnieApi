@@ -21,7 +21,6 @@ namespace OcenUczelnie.Core.Domain
             Salt = salt;
             Role = role;
         }
-
         protected User()
         {
             
