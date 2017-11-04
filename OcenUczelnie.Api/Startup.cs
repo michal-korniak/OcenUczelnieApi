@@ -44,6 +44,7 @@ namespace OcenUczelnie.Api
             services.AddSingleton(AutoMapperConfig.Initialize());
             var connectionString = Configuration.GetSettings<SqlSettings>().ConnectionString;
             services.AddDbContext<OcenUczelnieContext>(opt => opt.UseSqlServer(connectionString));
+            services.AddDbContext<OcenUczelnieContext>();
             services.AddMemoryCache();
             var jwtSettings = Configuration.GetSettings<JwtSettings>();
             services.AddAuthentication(options =>

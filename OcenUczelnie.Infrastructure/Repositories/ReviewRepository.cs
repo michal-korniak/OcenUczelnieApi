@@ -46,7 +46,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task<IEnumerable<Review>> GetReviewsForCourse(Guid courseId)
         {
-            var reviews = await _context.Reviews.Where(r => r.CourseId == courseId).ToListAsync();
+            var reviews = await _context.Reviews.Where(r => r.Course.Id == courseId).ToListAsync();
             return reviews;
         }
     }

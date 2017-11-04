@@ -7,5 +7,6 @@ namespace OcenUczelnie.Infrastructure.DTO
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Place { get; set; }
+        public string ImagePath { get; set; }
     }
 }

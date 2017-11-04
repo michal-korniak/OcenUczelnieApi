@@ -20,12 +20,12 @@ namespace OcenUczelnie.Infrastructure.Services
             _mapper = mapper;
             _universityRepository = universityRepository;
         }
-        public async Task AddAsync(string name, string place)
+        public async Task AddAsync(string name, string place, string imagePath)
         {
             var univeristy = await _universityRepository.GetByNameAsync(name);
             if(univeristy!=null)
                 throw new Exception("University was already added");
-            univeristy=new University(Guid.NewGuid(), name, place);
+            univeristy=new University(Guid.NewGuid(), name, place,imagePath);
             await _universityRepository.AddAsync(univeristy);
         }
 

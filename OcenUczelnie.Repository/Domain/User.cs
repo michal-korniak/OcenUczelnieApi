@@ -12,6 +12,8 @@ namespace OcenUczelnie.Core.Domain
         public string Salt { get; set; }
         public string Role { get; set; }
 
+        public ICollection<Review> Reviews { get; set; }
+
         public User(Guid id, string email, string name, string password, string salt, string role)
         {
             Id = id;

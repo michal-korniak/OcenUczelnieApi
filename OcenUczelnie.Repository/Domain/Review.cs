@@ -5,16 +5,17 @@ namespace OcenUczelnie.Core.Domain
     public class Review
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
-        public Guid CourseId { get; set; }
         public int Rating { get; set; }
         public string Content { get; set; }
 
-        public Review(Guid id, Guid userId, Guid courseId, int rating, string content)
+        public User User { get; set; }
+        public Course Course { get; set; }
+
+        public Review(Guid id, User user, Course course, int rating, string content)
         {
             Id = id;
-            UserId = userId;
-            CourseId = courseId;
+            User = user;
+            Course = course;
             Rating = rating;
             Content = content;
         }

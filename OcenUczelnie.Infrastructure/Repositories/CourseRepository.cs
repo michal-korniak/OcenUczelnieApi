@@ -46,7 +46,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task<IEnumerable<Course>> BrowseUniversityCoursesAsync(Guid universityId)
         {
-            var courses = await _context.Courses.Where(c => c.UniversityId == universityId).ToListAsync();
+            var courses = await _context.Courses.Where(c => c.University.Id == universityId).ToListAsync();
             return courses;
         }
     }

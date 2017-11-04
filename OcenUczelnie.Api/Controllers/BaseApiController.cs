@@ -12,7 +12,7 @@ namespace OcenUczelnie.Api.Controllers
         {
             Claim guidClaim = User.Claims.SingleOrDefault(x => x.Type.EndsWith("nameidentifier"));
             if(guidClaim==null)
-                throw new Exception("No one is already logged.");
+                throw new Exception("No one is logged in.");
             var id = Guid.Parse(guidClaim.Value);
             return id;
         }

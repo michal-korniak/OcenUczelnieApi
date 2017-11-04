@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OcenUczelnie.Core.Domain
 {
@@ -7,16 +8,20 @@ namespace OcenUczelnie.Core.Domain
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Place { get; set; }
+        public string ImagePath { get; set; }
+
+        public ICollection<Course> Courses { get; set; }
 
         protected University()
         {
             
         }
-        public University(Guid id, string name, string place)
+        public University(Guid id, string name, string place, string imagePath)
         {
             Id = id;
             Name = name;
             Place = place;
+            ImagePath = imagePath;
         }
     }
 }
