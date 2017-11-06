@@ -13,6 +13,8 @@ namespace OcenUczelnie.Core.Repositories
         Task UpdateAsync(University university);
         Task<University> GetByIdAsync(Guid id);
         Task<University> GetByNameAsync(string name);
+        Task<University> GetDetailsByIdAsync(Guid id);
+        Task<string[]> GetDepartamentNamesAsync(Guid id);
         Task<IEnumerable<University>> BrowseAllAsync();
     }
 }

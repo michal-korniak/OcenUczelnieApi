@@ -25,7 +25,8 @@ namespace OcenUczelnie.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Level");
+                    b.Property<string>("Department")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired();

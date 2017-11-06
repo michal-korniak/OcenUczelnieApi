@@ -7,7 +7,7 @@ namespace OcenUczelnie.Core.Domain
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string Level { get; set; }
+        public string Department { get; set; }
 
         public University University { get; set; }
         public ICollection<Review> Reviews { get; set; }

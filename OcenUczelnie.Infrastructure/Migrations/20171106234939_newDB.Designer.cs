@@ -11,8 +11,8 @@ using System;
 namespace OcenUczelnie.Infrastructure.Migrations
 {
     [DbContext(typeof(OcenUczelnieContext))]
-    [Migration("20171104200252_Init")]
-    partial class Init
+    [Migration("20171106234939_newDB")]
+    partial class newDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,8 @@ namespace OcenUczelnie.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Level");
+                    b.Property<string>("Department")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired();

@@ -35,6 +35,14 @@ namespace OcenUczelnie.Infrastructure.Services
             return _mapper.Map<University, UniversityDto>(university);
         }
 
+        public async Task<UniversityDetailsDto> GetDetails(Guid id)
+        {
+            var university = await _universityRepository.GetDetailsByIdAsync(id);
+            var universityDetailsDto= _mapper.Map<University, UniversityDetailsDto>(university);
+            universityDetailsDto.Departaments = await _universityRepository.GetDepartamentNamesAsync(id);
+            return universityDetailsDto;
+        }
+
         public async Task<IEnumerable<UniversityDto>> BrowseAllAsync()
         {
             var universites =await _universityRepository.BrowseAllAsync();

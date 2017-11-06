@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OcenUczelnie.Core.Domain;
@@ -44,6 +45,20 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task<University> GetByNameAsync(string name)
             => await _context.Universities.SingleOrDefaultAsync(u => u.Name == name);
+
+        public async Task<University> GetDetailsByIdAsync(Guid id)
+        {
+            var university = await GetByIdAsync(id);
+            university.Courses = await _context.Courses.Where(c => c.University == university).ToListAsync();
+            return university;
+        }
+
+        public async Task<string[]> GetDepartamentNamesAsync(Guid id)
+        {
+            var university = await GetByIdAsync(id);
+            return await _context.Courses.Where(c => c.University == university).GroupBy(c=>c.Department).Select(c => c.Key)
+                .ToArrayAsync();
+        }
 
         public async Task<IEnumerable<University>> BrowseAllAsync()
             => await _context.Universities.ToListAsync();

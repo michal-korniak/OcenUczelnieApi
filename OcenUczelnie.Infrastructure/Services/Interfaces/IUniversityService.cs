@@ -9,6 +9,7 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
     {
         Task AddAsync(string name, string place, string imagePath);
         Task<UniversityDto> Get(Guid id);
+        Task<UniversityDetailsDto> GetDetails(Guid id);
         Task<IEnumerable<UniversityDto>> BrowseAllAsync();
     }
 }

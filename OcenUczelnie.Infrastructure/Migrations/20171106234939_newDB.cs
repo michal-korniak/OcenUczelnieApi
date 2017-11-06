@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace OcenUczelnie.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class newDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,7 +43,7 @@ namespace OcenUczelnie.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },

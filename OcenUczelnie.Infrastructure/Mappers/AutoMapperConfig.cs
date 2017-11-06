@@ -21,6 +21,7 @@ namespace OcenUczelnie.Infrastructure.Mappers
                     cfg.CreateMap<User, UserDto>();
                     cfg.CreateMap<Course, CourseDto>();
                     cfg.CreateMap<University, UniversityDto>();
+                    cfg.CreateMap<University, UniversityDetailsDto>();
                     cfg.CreateMap<Review, ReviewDto>();
                 })
                 .CreateMapper();
