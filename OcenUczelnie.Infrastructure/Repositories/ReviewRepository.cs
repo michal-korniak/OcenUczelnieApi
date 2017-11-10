@@ -40,13 +40,14 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task<Review> GetByIdAsync(Guid id)
         {
-            var review=await _context.Reviews.SingleOrDefaultAsync(c => c.Id == id);
+            var review=await _context.Reviews.Include(c=>c.User).
+                SingleOrDefaultAsync(c => c.Id == id);
             return review;
         }
 
         public async Task<IEnumerable<Review>> GetReviewsForCourse(Guid courseId)
         {
-            var reviews = await _context.Reviews.Where(r => r.Course.Id == courseId).ToListAsync();
+            var reviews = await _context.Reviews.Include(c => c.User).Where(r => r.Course.Id == courseId).ToListAsync();
             return reviews;
         }
     }

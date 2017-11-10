@@ -9,7 +9,7 @@ namespace OcenUczelnie.Infrastructure.DTO
         public string Name { get; set; }
         public string Place { get; set; }
         public string ImagePath { get; set; }
-        public ICollection<string> Departaments { get; set; }
+        public ICollection<string> Departments { get; set; }
         public ICollection<CourseDto> Courses { get; set; }
     }
 }

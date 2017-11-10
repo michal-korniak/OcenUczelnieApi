@@ -8,7 +8,7 @@ using OcenUczelnie.Infrastructure.Services.Interfaces;
 
 namespace OcenUczelnie.Api.Controllers
 {
-    public class CourseController: BaseApiController
+    public class CourseController : BaseApiController
     {
         private readonly ICourseService _courseService;
         private readonly IReviewService _reviewService;
@@ -18,16 +18,22 @@ namespace OcenUczelnie.Api.Controllers
             _courseService = courseService;
             _reviewService = reviewService;
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var course = await _courseService.Get(id);
-            return Json(course);
-        }
-        [HttpGet("{id}/get_reviews")]
+        [HttpGet("{id}/reviews")]
         public async Task<IActionResult> GetReviews(Guid id)
         {
             var course = await _reviewService.GetReviews(id);
+            return Json(course);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCourse(Guid id)
+        {
+            var course = await _courseService.GetDetails(id);
+            return Json(course);
+        }
+        [HttpGet("{id}/details")]
+        public async Task<IActionResult> GetCourseDetails(Guid id)
+        {
+            var course = await _courseService.GetDetails(id);
             return Json(course);
         }
         [Authorize]

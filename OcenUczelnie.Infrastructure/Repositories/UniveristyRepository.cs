@@ -49,7 +49,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
         public async Task<University> GetDetailsByIdAsync(Guid id)
         {
             var university = await GetByIdAsync(id);
-            university.Courses = await _context.Courses.Where(c => c.University == university).ToListAsync();
+            university.Courses = await _context.Courses.Where(c => c.University == university).OrderBy(c=>c.Name).ToListAsync();
             return university;
         }
 

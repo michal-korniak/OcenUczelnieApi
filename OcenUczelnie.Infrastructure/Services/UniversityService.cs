@@ -39,7 +39,7 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var university = await _universityRepository.GetDetailsByIdAsync(id);
             var universityDetailsDto= _mapper.Map<University, UniversityDetailsDto>(university);
-            universityDetailsDto.Departaments = await _universityRepository.GetDepartamentNamesAsync(id);
+            universityDetailsDto.Departments = await _universityRepository.GetDepartamentNamesAsync(id);
             return universityDetailsDto;
         }
 

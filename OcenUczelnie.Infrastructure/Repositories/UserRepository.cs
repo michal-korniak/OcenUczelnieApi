@@ -57,5 +57,6 @@ namespace OcenUczelnie.Infrastructure.Repositories
         {
             return await _context.Users.ToListAsync();
         }
+
     }
 }

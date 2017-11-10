@@ -40,7 +40,16 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task<Course> GetByIdAsync(Guid id)
         {
-            var course=await _context.Courses.SingleOrDefaultAsync(c => c.Id == id);
+            var course = await _context.Courses.Include(c=>c.University).
+                SingleOrDefaultAsync(c => c.Id == id);
+            
+            return course;
+        }
+        public async Task<Course> GetDetailsByIdAsync(Guid id)
+        {
+            var course = await _context.Courses.Include(c => c.University).Include(c => c.Reviews).
+                SingleOrDefaultAsync(c => c.Id == id);
+
             return course;
         }
 

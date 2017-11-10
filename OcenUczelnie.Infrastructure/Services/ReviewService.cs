@@ -36,5 +36,6 @@ namespace OcenUczelnie.Infrastructure.Services
             var reviews = await _reviewRepository.GetReviewsForCourse(courseId);
             return _mapper.Map<IEnumerable<Review>, IEnumerable<ReviewDto>>(reviews);
         }
+
     }
 }

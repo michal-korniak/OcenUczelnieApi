@@ -30,5 +30,22 @@ namespace OcenUczelnie.Infrastructure.Services
             var courses = await _courseRepository.BrowseUniversityCoursesAsync(universityId);
             return _mapper.Map<IEnumerable<Course>, IEnumerable<CourseDto>>(courses);
         }
+
+        public async Task<CourseDetailsDto> GetDetails(Guid id)
+        {
+            var course = await _courseRepository.GetDetailsByIdAsync(id);
+            var courseDetailsDto = _mapper.Map<Course, CourseDetailsDto>(course);
+            courseDetailsDto.CountRating = courseDetailsDto.Reviews.Count;
+            if (courseDetailsDto.CountRating == 0)
+                courseDetailsDto.AvgRating = 0;
+            else {
+            int sum = 0;
+            foreach (var review in courseDetailsDto.Reviews)
+                sum += review.Rating;
+                courseDetailsDto.AvgRating = sum / courseDetailsDto.CountRating;
+            }
+            return courseDetailsDto;
+
+        }
     }
 }
