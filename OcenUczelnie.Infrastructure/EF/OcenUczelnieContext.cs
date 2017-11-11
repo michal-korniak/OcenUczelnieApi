@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OcenUczelnie.Core.Domain;
 
 namespace OcenUczelnie.Infrastructure.EF
@@ -14,6 +13,8 @@ namespace OcenUczelnie.Infrastructure.EF
         public DbSet<Review> Reviews { get; set; }
         public DbSet<University> Universities { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<ReviewUserApproved> ReviewUserApproved { get; set; }
+        public DbSet<ReviewUserDisapproved> ReviewUserDisapproved { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,6 +50,33 @@ namespace OcenUczelnie.Infrastructure.EF
             reviewEntity.HasOne(r => r.User).WithMany(u => u.Reviews).IsRequired();;
             reviewEntity.HasOne(r => r.Course).WithMany(c => c.Reviews).IsRequired();
             courseEntity.HasOne(c => c.University).WithMany(u => u.Courses).IsRequired();
+
+            modelBuilder.Entity<ReviewUserApproved>().HasKey(ru => new { ru.ReviewId, ru.UserId });
+            modelBuilder.Entity<ReviewUserApproved>()
+                .HasOne(ru => ru.Review)
+                .WithMany(ru => ru.ReviewUserApproved)
+                .HasForeignKey(ru => ru.ReviewId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReviewUserApproved>()
+                .HasOne(ru => ru.User)
+                .WithMany(ru => ru.ReviewUserApproved)
+                .HasForeignKey(ru => ru.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<ReviewUserDisapproved>().HasKey(ru => new { ru.ReviewId, ru.UserId });
+            modelBuilder.Entity<ReviewUserDisapproved>()
+                .HasOne(ru => ru.Review)
+                .WithMany(ru => ru.ReviewUserDisapproved)
+                .HasForeignKey(ru => ru.ReviewId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReviewUserDisapproved>()
+                .HasOne(ru => ru.User)
+                .WithMany(ru => ru.ReviewUserDisapproved)
+                .HasForeignKey(ru => ru.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

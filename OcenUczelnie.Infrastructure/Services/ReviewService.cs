@@ -37,5 +37,30 @@ namespace OcenUczelnie.Infrastructure.Services
             return _mapper.Map<IEnumerable<Review>, IEnumerable<ReviewDto>>(reviews);
         }
 
+        public async Task ApproveReview(Guid userId, Guid reviewId)
+        {
+            var priorUserMark = _reviewRepository.GetUserMarkToReview(userId, reviewId);
+            if (priorUserMark == 1)
+                throw new Exception("User already approved this review.");
+            else if (priorUserMark == -1)
+                await _reviewRepository.RemoveUserReviewDisapproved(userId, reviewId);
+            await _reviewRepository.AddUserReviewApproved(userId, reviewId);
+        }
+
+        public async Task DisapproveReview(Guid userId, Guid reviewId)
+        {
+            var priorUserMark = _reviewRepository.GetUserMarkToReview(userId, reviewId);
+            if (priorUserMark == -1)
+                throw new Exception("User already disapproved this review.");
+            else if (priorUserMark == 1)
+                await _reviewRepository.RemoveUserReviewApproved(userId, reviewId);
+            await _reviewRepository.AddUserReviewDisapproved(userId, reviewId);
+        }
+
+        public int GetReviewPoints(Guid reviewId)
+        {
+            return _reviewRepository.GetReviewPoints(reviewId);
+        }
+
     }
 }

@@ -9,5 +9,8 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
     {
         Task PostReview(Guid userId, Guid courseId, int rating, string content);
         Task<IEnumerable<ReviewDto>> GetReviews(Guid courseId);
+        Task ApproveReview(Guid userId,Guid reviewId);
+        Task DisapproveReview(Guid userId, Guid reviewId);
+        int GetReviewPoints(Guid reviewId);
     }
 }

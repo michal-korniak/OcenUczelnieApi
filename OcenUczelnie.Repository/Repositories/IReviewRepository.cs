@@ -11,6 +11,12 @@ namespace OcenUczelnie.Core.Repositories
         Task RemoveAsync(Guid id);
         Task UpdateAsync(Review review);
         Task<Review> GetByIdAsync(Guid id);
-        Task<IEnumerable<Review>> GetReviewsForCourse(Guid courseId);
+        Task<ICollection<Review>> GetReviewsForCourse(Guid courseId);
+        Task AddUserReviewApproved(Guid userId, Guid reviewId);
+        Task AddUserReviewDisapproved(Guid userId, Guid reviewId);
+        Task RemoveUserReviewApproved(Guid userId, Guid reviewId);
+        Task RemoveUserReviewDisapproved(Guid userId, Guid reviewId);
+        int GetReviewPoints(Guid reviewId);
+        int GetUserMarkToReview(Guid userId, Guid reviewId);
     }
 }

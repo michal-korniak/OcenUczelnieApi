@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OcenUczelnie.Core.Domain
 {
@@ -10,6 +11,11 @@ namespace OcenUczelnie.Core.Domain
 
         public User User { get; set; }
         public Course Course { get; set; }
+
+        public ICollection<ReviewUserApproved> ReviewUserApproved { get; set; }
+        public ICollection<ReviewUserDisapproved> ReviewUserDisapproved { get; set; }
+
+
 
         public Review(Guid id, User user, Course course, int rating, string content)
         {

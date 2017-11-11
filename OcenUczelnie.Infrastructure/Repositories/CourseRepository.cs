@@ -45,13 +45,6 @@ namespace OcenUczelnie.Infrastructure.Repositories
             
             return course;
         }
-        public async Task<Course> GetDetailsByIdAsync(Guid id)
-        {
-            var course = await _context.Courses.Include(c => c.University).Include(c => c.Reviews).
-                SingleOrDefaultAsync(c => c.Id == id);
-
-            return course;
-        }
 
         public async Task<IEnumerable<Course>> BrowseUniversityCoursesAsync(Guid universityId)
         {

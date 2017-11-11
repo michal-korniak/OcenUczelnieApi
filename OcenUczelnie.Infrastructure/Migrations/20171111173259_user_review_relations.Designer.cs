@@ -11,9 +11,10 @@ using System;
 namespace OcenUczelnie.Infrastructure.Migrations
 {
     [DbContext(typeof(OcenUczelnieContext))]
-    partial class OcenUczelnieContextModelSnapshot : ModelSnapshot
+    [Migration("20171111173259_user_review_relations")]
+    partial class user_review_relations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

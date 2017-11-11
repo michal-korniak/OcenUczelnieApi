@@ -9,7 +9,7 @@ using OcenUczelnie.Infrastructure.EF;
 
 namespace OcenUczelnie.Infrastructure.Repositories
 {
-    public class UserRepository: IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly OcenUczelnieContext _context;
 
@@ -46,7 +46,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Email==email);
+            return await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
         }
         public async Task<User> GetByNameAsync(string name)
         {

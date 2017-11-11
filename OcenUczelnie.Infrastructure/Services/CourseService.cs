@@ -12,11 +12,13 @@ namespace OcenUczelnie.Infrastructure.Services
     public class CourseService: ICourseService
     {
         private readonly ICourseRepository _courseRepository;
+        private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
 
-        public CourseService(ICourseRepository courseRepository, IMapper mapper)
+        public CourseService(ICourseRepository courseRepository, IReviewRepository reviewRepository, IMapper mapper)
         {
             _courseRepository = courseRepository;
+            _reviewRepository = reviewRepository;
             _mapper = mapper;
         }
         public async Task<CourseDto> Get(Guid id)
@@ -33,17 +35,10 @@ namespace OcenUczelnie.Infrastructure.Services
 
         public async Task<CourseDetailsDto> GetDetails(Guid id)
         {
-            var course = await _courseRepository.GetDetailsByIdAsync(id);
+            var course = await _courseRepository.GetByIdAsync(id);
+            course.Reviews = await _reviewRepository.GetReviewsForCourse(id);
             var courseDetailsDto = _mapper.Map<Course, CourseDetailsDto>(course);
-            courseDetailsDto.CountRating = courseDetailsDto.Reviews.Count;
-            if (courseDetailsDto.CountRating == 0)
-                courseDetailsDto.AvgRating = 0;
-            else {
-            int sum = 0;
-            foreach (var review in courseDetailsDto.Reviews)
-                sum += review.Rating;
-                courseDetailsDto.AvgRating = sum / courseDetailsDto.CountRating;
-            }
+
             return courseDetailsDto;
 
         }

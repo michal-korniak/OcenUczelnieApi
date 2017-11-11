@@ -2,6 +2,8 @@
 using OcenUczelnie.Core.Domain;
 using OcenUczelnie.Core.Repositories;
 using OcenUczelnie.Infrastructure.DTO;
+using System;
+using System.Linq;
 
 namespace OcenUczelnie.Infrastructure.Mappers
 {
@@ -20,11 +22,15 @@ namespace OcenUczelnie.Infrastructure.Mappers
                 {
                     cfg.CreateMap<User, UserDto>();
                     cfg.CreateMap<Course, CourseDto>();
-                    cfg.CreateMap<Course, CourseDetailsDto>();
+                    cfg.CreateMap<Course, CourseDetailsDto>()
+                        .AfterMap((c, dto) => dto.CountRating = c.Reviews.Count)
+                        .AfterMap((c, dto) => dto.AvgRating = Math.Round(c.Reviews.AsQueryable().Average(r => r.Rating),2));
                     cfg.CreateMap<University, UniversityDto>();
                     cfg.CreateMap<University, UniversityDetailsDto>();
-                    cfg.CreateMap<Review, ReviewDto>();
+                    cfg.CreateMap<Review, ReviewDto>()
+                        .AfterMap((r, dto) => dto.Points = r.ReviewUserApproved.Count - r.ReviewUserDisapproved.Count);
                 })
                 .CreateMapper();
+
     }
 }

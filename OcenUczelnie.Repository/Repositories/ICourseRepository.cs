@@ -13,6 +13,5 @@ namespace OcenUczelnie.Core.Repositories
         Task UpdateAsync(Course course);
         Task<Course> GetByIdAsync(Guid id);
         Task<IEnumerable<Course>> BrowseUniversityCoursesAsync(Guid universityId);
-        Task<Course> GetDetailsByIdAsync(Guid id);
     }
 }

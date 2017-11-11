@@ -7,6 +7,7 @@ namespace OcenUczelnie.Infrastructure.DTO
         public Guid Id { get; set; }
         public int Rating { get; set; }
         public string Content { get; set; }
+        public int Points { get; set; }
 
         public UserDto User { get; set; }
         public CourseDto Course { get; set; }
