@@ -24,7 +24,7 @@ namespace OcenUczelnie.Infrastructure.Mappers
                     cfg.CreateMap<Course, CourseDto>();
                     cfg.CreateMap<Course, CourseDetailsDto>()
                         .AfterMap((c, dto) => dto.CountRating = c.Reviews.Count)
-                        .AfterMap((c, dto) => dto.AvgRating = Math.Round(c.Reviews.AsQueryable().Average(r => r.Rating),2));
+                        .AfterMap((c, dto) => dto.AvgRating = c.Reviews.Count>0?Math.Round(c.Reviews.AsQueryable().Average(r => r.Rating),2):0);
                     cfg.CreateMap<University, UniversityDto>();
                     cfg.CreateMap<University, UniversityDetailsDto>();
                     cfg.CreateMap<Review, ReviewDto>()

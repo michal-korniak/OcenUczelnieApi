@@ -62,5 +62,20 @@ namespace OcenUczelnie.Infrastructure.Services
             return _reviewRepository.GetReviewPoints(reviewId);
         }
 
+        public int GetUserMarkToReview(Guid userId, Guid reviewId)
+        {
+            return _reviewRepository.GetUserMarkToReview(userId, reviewId);
+        }
+
+        public async Task DeleteApproveFromReview(Guid userId, Guid reviewId)
+        {
+            await _reviewRepository.RemoveUserReviewApproved(userId, reviewId);
+        }
+        public async Task DeleteDisapproveFromReview(Guid userId, Guid reviewId)
+        {
+            await _reviewRepository.RemoveUserReviewDisapproved(userId, reviewId);
+        }
+
+
     }
 }

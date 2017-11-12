@@ -12,5 +12,8 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
         Task ApproveReview(Guid userId,Guid reviewId);
         Task DisapproveReview(Guid userId, Guid reviewId);
         int GetReviewPoints(Guid reviewId);
+        int GetUserMarkToReview(Guid userId, Guid reviewId);
+        Task DeleteApproveFromReview(Guid userId, Guid reviewId);
+        Task DeleteDisapproveFromReview(Guid userId, Guid reviewId);
     }
 }

@@ -25,11 +25,32 @@ namespace OcenUczelnie.Api.Controllers
             return Ok();
         }
         [Authorize]
+        [HttpDelete("{reviewId}/delete_approve")]
+        public async Task<IActionResult> DeleteApproveFromReview(Guid reviewId)
+        {
+            await _reviewService.DeleteApproveFromReview(GetCurrentUserId(), reviewId);
+            return Ok();
+        }
+        [Authorize]
         [HttpPost("{reviewId}/disapprove")]
         public async Task<IActionResult> DisapproveReview(Guid reviewId)
         {
             await _reviewService.DisapproveReview(GetCurrentUserId(), reviewId);
             return Ok();
         }
+        [Authorize]
+        [HttpDelete("{reviewId}/delete_disapprove")]
+        public async Task<IActionResult> DeleteDisapproveFromReview(Guid reviewId)
+        {
+            await _reviewService.DeleteDisapproveFromReview(GetCurrentUserId(), reviewId);
+            return Ok();
+        }
+        [Authorize]
+        [HttpGet("{reviewId}/mark")]
+        public IActionResult GetUserMarkToReview(Guid reviewId)
+        {
+            return Json(_reviewService.GetUserMarkToReview(GetCurrentUserId(), reviewId));
+        }
+
     }
 }
