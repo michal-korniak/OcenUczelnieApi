@@ -16,7 +16,7 @@ namespace OcenUczelnie.Infrastructure.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public ReviewService(IReviewRepository reviewRepository, ICourseRepository courseRepository,IUserRepository userRepository, IMapper mapper)
+        public ReviewService(IReviewRepository reviewRepository, ICourseRepository courseRepository, IUserRepository userRepository, IMapper mapper)
         {
             _reviewRepository = reviewRepository;
             _courseRepository = courseRepository;
@@ -25,6 +25,12 @@ namespace OcenUczelnie.Infrastructure.Services
         }
         public async Task PostReview(Guid userId, Guid courseId, int rating, string content)
         {
+            if(rating<1 || rating>5)
+            {
+                throw new Exception("Rating should be in range from 1 to 5");
+            }
+            if (content == null || content.Length < 20)
+                throw new Exception("Content of review doesn't exist or has less than 20 characters.");
             var user = await _userRepository.GetByIdAsync(userId);
             var course = await _courseRepository.GetByIdAsync(courseId);
             var review = new Review(new Guid(), user, course, rating, content);
@@ -39,6 +45,9 @@ namespace OcenUczelnie.Infrastructure.Services
 
         public async Task ApproveReview(Guid userId, Guid reviewId)
         {
+            var review = await _reviewRepository.GetByIdAsync(reviewId);
+            if (review.User.Id == userId)
+                throw new Exception("User cannot approve his own review.");
             var priorUserMark = _reviewRepository.GetUserMarkToReview(userId, reviewId);
             if (priorUserMark == 1)
                 throw new Exception("User already approved this review.");
@@ -49,6 +58,9 @@ namespace OcenUczelnie.Infrastructure.Services
 
         public async Task DisapproveReview(Guid userId, Guid reviewId)
         {
+            var review = await _reviewRepository.GetByIdAsync(reviewId);
+            if (review.User.Id == userId)
+                throw new Exception("User cannot disapprove his own review.");
             var priorUserMark = _reviewRepository.GetUserMarkToReview(userId, reviewId);
             if (priorUserMark == -1)
                 throw new Exception("User already disapproved this review.");
@@ -76,6 +88,14 @@ namespace OcenUczelnie.Infrastructure.Services
             await _reviewRepository.RemoveUserReviewDisapproved(userId, reviewId);
         }
 
-
+        public async Task RemoveReview(Guid userId, Guid reviewId)
+        {
+            var review = await _reviewRepository.GetByIdAsync(reviewId);
+            if(userId!=review.User.Id)
+            {
+                throw new Exception("This user is not an author of this review.");
+            }
+            await _reviewRepository.RemoveAsync(reviewId);
+        }
     }
 }

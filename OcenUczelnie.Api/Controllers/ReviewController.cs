@@ -51,6 +51,13 @@ namespace OcenUczelnie.Api.Controllers
         {
             return Json(_reviewService.GetUserMarkToReview(GetCurrentUserId(), reviewId));
         }
+        [Authorize]
+        [HttpDelete("{reviewId}/delete")]
+        public async Task<IActionResult> RemoveReview(Guid reviewId)
+        {
+            await _reviewService.RemoveReview(GetCurrentUserId(), reviewId);
+            return Ok();
+        }
 
     }
 }

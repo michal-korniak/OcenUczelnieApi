@@ -28,7 +28,7 @@ namespace OcenUczelnie.Infrastructure.Services
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(ClaimTypes.Role,role)
             };
-            DateTime expires = DateTime.UtcNow.AddMinutes(15);
+            DateTime expires = DateTime.UtcNow.AddMinutes(_jwtSettings.ValidInMinutes);
             var token = new JwtSecurityToken(
                 issuer:_jwtSettings.Issuer,
                 claims:claims,

@@ -30,6 +30,8 @@ namespace OcenUczelnie.Infrastructure.Repositories
             var review =await GetByIdAsync(id);
             if(review==null)
                 return;
+            _context.RemoveRange(_context.ReviewUserApproved.Where(r => r.ReviewId == id));
+            _context.RemoveRange(_context.ReviewUserDisapproved.Where(r => r.ReviewId == id));
             _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
         }
