@@ -26,8 +26,6 @@ namespace OcenUczelnie.Infrastructure.Repositories
         public async Task RemoveAsync(Guid id)
         {
             var course =await GetByIdAsync(id);
-            if(course==null)
-                return;
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
         }
@@ -37,19 +35,30 @@ namespace OcenUczelnie.Infrastructure.Repositories
             _context.Courses.Update(course);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<Course> GetByIdAsync(Guid id)
+        public async Task<IEnumerable<Course>> BrowseCoursesForUniversityAsync(Guid universityId, bool getUniversity=false, bool getReviews = false)
         {
-            var course = await _context.Courses.Include(c=>c.University).
-                SingleOrDefaultAsync(c => c.Id == id);
+            var courses = await _context.Courses.Where(c => c.University.Id == universityId).OrderBy(c => c.Name).ToListAsync();
+            return courses;
+        }
+
+        public async Task<Course> GetByIdAsync(Guid id, bool getUniversity=false,bool getReviews=false)
+        {
+            var query = GetCourseQuery(getUniversity,getReviews);
+            var course = await query.SingleOrDefaultAsync(c => c.Id == id);
             
             return course;
         }
 
-        public async Task<IEnumerable<Course>> BrowseUniversityCoursesAsync(Guid universityId)
+        private IQueryable<Course> GetCourseQuery(bool getUniversity,bool getReviews)
         {
-            var courses = await _context.Courses.Where(c => c.University.Id == universityId).ToListAsync();
-            return courses;
+            IQueryable<Course> query = _context.Courses;
+            if(getUniversity)
+                query=query.Include(c => c.University);
+            if (getReviews)
+                query = query.Include(c => c.Reviews);
+            return query;
         }
+
+
     }
 }

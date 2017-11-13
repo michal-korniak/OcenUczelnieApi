@@ -27,7 +27,7 @@ namespace OcenUczelnie.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDetails(Guid id)
         {
-            var courses = await _universityService.GetDetails(id);
+            var courses = await _universityService.GetDetailsAsync(id);
             return Json(courses);
         }
     }

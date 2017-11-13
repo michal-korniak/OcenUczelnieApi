@@ -7,8 +7,8 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
 {
     public interface ICourseService:IService
     {
-        Task<CourseDto> Get(Guid id);
-        Task<CourseDetailsDto> GetDetails(Guid id);
+        Task<CourseDto> GetAsync(Guid id);
+        Task<CourseDetailsDto> GetDetailsAsync(Guid id);
         Task<IEnumerable<CourseDto>> BrowseUniversityCoursesAsync(Guid universityId);
     }
 }

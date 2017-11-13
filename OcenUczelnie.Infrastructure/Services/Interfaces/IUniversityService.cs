@@ -8,8 +8,8 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
     public interface IUniversityService: IService
     {
         Task AddAsync(string name, string place, string imagePath);
-        Task<UniversityDto> Get(Guid id);
-        Task<UniversityDetailsDto> GetDetails(Guid id);
+        Task<UniversityDto> GetAsync(Guid id);
+        Task<UniversityDetailsDto> GetDetailsAsync(Guid id);
         Task<IEnumerable<UniversityDto>> BrowseAllAsync();
     }
 }

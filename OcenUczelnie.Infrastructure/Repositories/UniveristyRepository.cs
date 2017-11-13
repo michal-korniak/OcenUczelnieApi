@@ -40,27 +40,31 @@ namespace OcenUczelnie.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<University> GetByIdAsync(Guid id)
-            => await _context.Universities.SingleOrDefaultAsync(u => u.Id == id);
-
-        public async Task<University> GetByNameAsync(string name)
-            => await _context.Universities.SingleOrDefaultAsync(u => u.Name == name);
-
-        public async Task<University> GetDetailsByIdAsync(Guid id)
-        {
-            var university = await GetByIdAsync(id);
-            university.Courses = await _context.Courses.Where(c => c.University == university).OrderBy(c=>c.Name).ToListAsync();
-            return university;
-        }
-
         public async Task<string[]> GetDepartamentNamesAsync(Guid id)
         {
-            var university = await GetByIdAsync(id);
+            var university = await GetByIdAsync(id,true);
             return await _context.Courses.Where(c => c.University == university).GroupBy(c=>c.Department).Select(c => c.Key)
                 .ToArrayAsync();
         }
 
-        public async Task<IEnumerable<University>> BrowseAllAsync()
-            => await _context.Universities.ToListAsync();
+        public async Task<University> GetByIdAsync(Guid id,bool getCourses=false)
+        {
+            var query = GetUniversityQuery(getCourses);
+            return await query.SingleOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<IEnumerable<University>> BrowseAllAsync(bool getCourses = false)
+        {
+            var query = GetUniversityQuery(getCourses);
+            return await query.ToListAsync();
+        }
+
+        private IQueryable<University> GetUniversityQuery(bool getCourses)
+        {
+            IQueryable<University> query = _context.Universities;
+            if (getCourses)
+                query = query.Include(u => u.Courses);
+            return query;
+        }
     }
 }

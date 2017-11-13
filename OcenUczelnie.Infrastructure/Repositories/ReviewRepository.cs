@@ -9,16 +9,15 @@ using OcenUczelnie.Infrastructure.EF;
 
 namespace OcenUczelnie.Infrastructure.Repositories
 {
-    public class ReviewRepository: IReviewRepository
+    public class ReviewRepository : IReviewRepository
     {
         private readonly OcenUczelnieContext _context;
-        private readonly IUserRepository _userRepository;
 
-        public ReviewRepository(OcenUczelnieContext context, IUserRepository userRepository)
+        public ReviewRepository(OcenUczelnieContext context)
         {
             _context = context;
-            _userRepository = userRepository;
         }
+
         public async Task AddAsync(Review review)
         {
             await _context.Reviews.AddAsync(review);
@@ -27,11 +26,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
 
         public async Task RemoveAsync(Guid id)
         {
-            var review =await GetByIdAsync(id);
-            if(review==null)
-                return;
-            _context.RemoveRange(_context.ReviewUserApproved.Where(r => r.ReviewId == id));
-            _context.RemoveRange(_context.ReviewUserDisapproved.Where(r => r.ReviewId == id));
+            var review = await GetByIdAsync(id);
             _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
         }
@@ -42,70 +37,36 @@ namespace OcenUczelnie.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Review> GetByIdAsync(Guid id)
+        public async Task<Review> GetByIdAsync(Guid id, bool getUser = false, bool getCourse = false,
+            bool getOpinions = false)
         {
-            var review=await _context.Reviews.Include(c=>c.User).
-                SingleOrDefaultAsync(c => c.Id == id);
+            var query = GetReviewQuery(getUser, getCourse, getOpinions);
+            var review = await query.SingleOrDefaultAsync(c => c.Id == id);
             return review;
         }
 
-        public async Task<ICollection<Review>> GetReviewsForCourse(Guid courseId)
+        public async Task<ICollection<Review>> GetReviewsForCourseAsync(Guid courseId, bool getUser = false,
+            bool getCourse = false, bool getOpinions = false)
         {
-            var reviews = await _context.Reviews.Include(c => c.User)
-                .Include(c=>c.ReviewUserApproved).ThenInclude(rua=>rua.Review)
-                .Include(c => c.ReviewUserApproved).ThenInclude(rua => rua.User)
-                .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.Review)
-                .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.User)
-                .Where(r => r.Course.Id == courseId).ToListAsync();
+            var query = GetReviewQuery(getUser, getCourse, getOpinions);
+            var reviews = await query.Where(r => r.Course.Id == courseId).ToListAsync();
             return reviews;
         }
 
-        public async Task AddUserReviewApproved(Guid userId, Guid reviewId)
+        private IQueryable<Review> GetReviewQuery(bool getUser, bool getCourse, bool getOpinions)
         {
-            var user = await _userRepository.GetByIdAsync(userId);
-            var review = await GetByIdAsync(reviewId);
-            var reviewUserApproved = new ReviewUserApproved(user, review);
-            _context.ReviewUserApproved.Add(reviewUserApproved);
-            await _context.SaveChangesAsync();
-        }
-        public async Task RemoveUserReviewApproved(Guid userId, Guid reviewId)
-        {
-            var user = await _userRepository.GetByIdAsync(userId);
-            var review = await GetByIdAsync(reviewId);
-            var reviewUserApproved = new ReviewUserApproved(user, review);
-            _context.ReviewUserApproved.Remove(reviewUserApproved);
-            await _context.SaveChangesAsync();
-        }
-        public async Task AddUserReviewDisapproved(Guid userId, Guid reviewId)
-        {
-            var user = await _userRepository.GetByIdAsync(userId);
-            var review = await GetByIdAsync(reviewId);
-            var reviewUserDisapproved = new ReviewUserDisapproved(user, review);
-            _context.ReviewUserDisapproved.Add(reviewUserDisapproved);
-            await _context.SaveChangesAsync();
-        }
-        public async Task RemoveUserReviewDisapproved(Guid userId, Guid reviewId)
-        {
-            var user = await _userRepository.GetByIdAsync(userId);
-            var review = await GetByIdAsync(reviewId);
-            var reviewUserDisapproved = new ReviewUserDisapproved(user, review);
-            _context.ReviewUserDisapproved.Remove(reviewUserDisapproved);
-            await _context.SaveChangesAsync();
-        }
-        public int GetReviewPoints(Guid reviewId)
-        {
-            int approved=_context.ReviewUserApproved.Where(rua => rua.ReviewId==reviewId).Count();
-            int disapproved= _context.ReviewUserDisapproved.Where(rud => rud.ReviewId == reviewId).Count();
-            return approved - disapproved;
-        }
-        public int GetUserMarkToReview(Guid userId, Guid reviewId)
-        {
-            if (_context.ReviewUserApproved.Where(rua => rua.ReviewId == reviewId && rua.UserId == userId).Count() == 1)
-                return 1;
-            if (_context.ReviewUserDisapproved.Where(rud => rud.ReviewId == reviewId && rud.UserId == userId).Count() == 1)
-                return -1;
-            else
-                return 0;
+            IQueryable<Review> query = _context.Reviews;
+            if (getUser)
+                query=query.Include(c => c.User);
+            if (getCourse)
+                query=query.Include(c => c.Course);
+            if (getOpinions)
+                query = query
+                    .Include(c => c.ReviewUserApproved).ThenInclude(rua => rua.Review)
+                    .Include(c => c.ReviewUserApproved).ThenInclude(rua => rua.User)
+                    .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.Review)
+                    .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.User);
+            return query;
         }
     }
 }

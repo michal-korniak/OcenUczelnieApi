@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using OcenUczelnie.Core.Domain;
@@ -22,22 +23,20 @@ namespace OcenUczelnie.Infrastructure.Services
         }
         public async Task AddAsync(string name, string place, string imagePath)
         {
-            var univeristy = await _universityRepository.GetByNameAsync(name);
-            if(univeristy!=null)
-                throw new Exception("University was already added");
-            univeristy=new University(Guid.NewGuid(), name, place,imagePath);
+            var univeristy=new University(Guid.NewGuid(), name, place,imagePath);
             await _universityRepository.AddAsync(univeristy);
         }
 
-        public async Task<UniversityDto> Get(Guid id)
+        public async Task<UniversityDto> GetAsync(Guid id)
         {
             var university = await _universityRepository.GetByIdAsync(id);
             return _mapper.Map<University, UniversityDto>(university);
         }
 
-        public async Task<UniversityDetailsDto> GetDetails(Guid id)
+        public async Task<UniversityDetailsDto> GetDetailsAsync(Guid id)
         {
-            var university = await _universityRepository.GetDetailsByIdAsync(id);
+            var university = await _universityRepository.GetByIdAsync(id,true);
+            university.Courses = university.Courses.OrderBy(c => c.Name).ToList();
             var universityDetailsDto= _mapper.Map<University, UniversityDetailsDto>(university);
             universityDetailsDto.Departments = await _universityRepository.GetDepartamentNamesAsync(id);
             return universityDetailsDto;

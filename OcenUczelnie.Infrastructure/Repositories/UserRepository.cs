@@ -27,8 +27,6 @@ namespace OcenUczelnie.Infrastructure.Repositories
         public async Task RemoveAsync(Guid id)
         {
             var user = await GetByIdAsync(id);
-            if (user == null)
-                return;
             _context.Remove(user);
             await _context.SaveChangesAsync();
         }
@@ -39,24 +37,47 @@ namespace OcenUczelnie.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User> GetByIdAsync(Guid id)
+
+        public async Task<IEnumerable<User>> BrowseAllAsync(bool getReviews = false, bool getOpinions = false)
         {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
+            var query = GetUserQuery(getReviews, getOpinions);
+            var users = await query.ToListAsync();
+            return users;
         }
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User> GetByIdAsync(Guid id, bool getReviews = false, bool getOpinions = false)
         {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
-        }
-        public async Task<User> GetByNameAsync(string name)
-        {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Name == name);
+            var query = GetUserQuery(getReviews, getOpinions);
+            var user = await query.SingleOrDefaultAsync(x => x.Id == id);
+            return user;
         }
 
-        public async Task<IEnumerable<User>> BrowseAllAsync()
+        public async Task<User> GetByNameAsync(string name, bool getReviews = false, bool getOpinions = false)
         {
-            return await _context.Users.ToListAsync();
+            var query = GetUserQuery(getReviews, getOpinions);
+            var user = await query.SingleOrDefaultAsync(x => x.Name == name);
+            return user;
         }
 
+        public async Task<User> GetByEmailAsync(string email, bool getReviews = false, bool getOpinions = false)
+        {
+            var query = GetUserQuery(getReviews, getOpinions);
+            var user = await query.SingleOrDefaultAsync(x => x.Email == email);
+            return user;
+        }
+
+        private IQueryable<User> GetUserQuery(bool getReviews, bool getOpinions)
+        {
+            IQueryable<User> query= _context.Users;
+            if (getReviews)
+                query = query.Include(u => u.Reviews);
+            else if (getOpinions)
+                query = query
+                    .Include(c => c.ReviewUserApproved).ThenInclude(rua => rua.Review)
+                    .Include(c => c.ReviewUserApproved).ThenInclude(rua => rua.User)
+                    .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.Review)
+                    .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.User);
+            return query;
+        }
     }
 }

@@ -11,9 +11,9 @@ namespace OcenUczelnie.Core.Repositories
         Task AddAsync(User user);
         Task RemoveAsync(Guid id);
         Task UpdateAsync(User user);
-        Task<User> GetByIdAsync(Guid id);
-        Task<User> GetByEmailAsync(string email);
-        Task<User> GetByNameAsync(string name);
-        Task<IEnumerable<User>> BrowseAllAsync();
+        Task<User> GetByIdAsync(Guid id, bool getReviews = false, bool getOpinions = false);
+        Task<User> GetByEmailAsync(string email, bool getReviews = false, bool getOpinions = false);
+        Task<User> GetByNameAsync(string name, bool getReviews = false, bool getOpinions = false);
+        Task<IEnumerable<User>> BrowseAllAsync(bool getReviews = false, bool getOpinions = false);
     }
 }

@@ -13,10 +13,10 @@ namespace OcenUczelnie.Core.Domain
         public Guid ReviewId { get; set; }
         public Review Review { get; set; }
 
-        public ReviewUserApproved(User user, Review review)
+        public ReviewUserApproved(Guid userId, Guid reviewId)
         {
-            User = user;
-            Review = review;
+            UserId = userId;
+            ReviewId = reviewId;
         }
         protected ReviewUserApproved()
         {

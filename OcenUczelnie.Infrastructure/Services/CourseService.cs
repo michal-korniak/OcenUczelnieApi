@@ -21,7 +21,7 @@ namespace OcenUczelnie.Infrastructure.Services
             _reviewRepository = reviewRepository;
             _mapper = mapper;
         }
-        public async Task<CourseDto> Get(Guid id)
+        public async Task<CourseDto> GetAsync(Guid id)
         {
             var course=await _courseRepository.GetByIdAsync(id);
             return _mapper.Map<Course, CourseDto>(course);
@@ -29,14 +29,14 @@ namespace OcenUczelnie.Infrastructure.Services
 
         public async Task<IEnumerable<CourseDto>> BrowseUniversityCoursesAsync(Guid universityId)
         {
-            var courses = await _courseRepository.BrowseUniversityCoursesAsync(universityId);
+            var courses = await _courseRepository.BrowseCoursesForUniversityAsync(universityId);
             return _mapper.Map<IEnumerable<Course>, IEnumerable<CourseDto>>(courses);
         }
 
-        public async Task<CourseDetailsDto> GetDetails(Guid id)
+        public async Task<CourseDetailsDto> GetDetailsAsync(Guid id)
         {
-            var course = await _courseRepository.GetByIdAsync(id);
-            course.Reviews = await _reviewRepository.GetReviewsForCourse(id);
+            var course = await _courseRepository.GetByIdAsync(id,true);
+            course.Reviews = await _reviewRepository.GetReviewsForCourseAsync(id, true, false, true);
             var courseDetailsDto = _mapper.Map<Course, CourseDetailsDto>(course);
 
             return courseDetailsDto;
