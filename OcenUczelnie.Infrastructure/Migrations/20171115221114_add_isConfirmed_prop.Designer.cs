@@ -11,9 +11,10 @@ using System;
 namespace OcenUczelnie.Infrastructure.Migrations
 {
     [DbContext(typeof(OcenUczelnieContext))]
-    partial class OcenUczelnieContextModelSnapshot : ModelSnapshot
+    [Migration("20171115221114_add_isConfirmed_prop")]
+    partial class add_isConfirmed_prop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -24,17 +24,24 @@ namespace OcenUczelnie.Api.Controllers
             _userService = userService;
             _memoryCache = memoryCache;
         }
-        [HttpGet("browseAll")]
-        public async Task<IActionResult> BrowseAll()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserDetailsById(Guid id)
         {
-            return Json(await _userService.BrowseAllAsync());
+            var user = await _userService.GetByIdAsync(id);
+            return Json(user);
         }
-        [HttpGet("details")]
+        [HttpGet("get_by_email/{email}")]
+        public async Task<IActionResult> GetUserDetailsByEmail(string email)
+        {
+            var user = await _userService.GetByEmailAsync(email);
+            return Json(user);
+        }
+        [HttpGet("current_user")]
         [Authorize]
-        public async Task<IActionResult> UserDetails()
+        public async Task<IActionResult> GetCurrentUser()
         {
             var id = GetCurrentUserId();
-            var user = await _userService.GetAsync(id);
+            var user = await _userService.GetByIdAsync(id);
             return Json(user);
         }
         [HttpPost("register")]
@@ -42,7 +49,8 @@ namespace OcenUczelnie.Api.Controllers
         {
             await _userService.RegisterAsync(createUser.Email, createUser.Name, createUser.Password, "user");
             var id=_memoryCache.Get<Guid>("registeredUserId");
-            return Created($"user/{id}", null);
+            var user = await _userService.GetByIdAsync(id);
+            return Json(user);
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginUser loginUser)
@@ -56,15 +64,20 @@ namespace OcenUczelnie.Api.Controllers
         public async Task<IActionResult> Update([FromBody]UpdateUser updateUser)
         {
             var id = GetCurrentUserId();
-            await _userService.UpdateAsync(id, updateUser.Email, updateUser.Name, updateUser.Password);
+            await _userService.UpdateAsync(id, updateUser.Name, updateUser.Password);
             return Ok();
         }
 
-        [HttpGet("change_role")]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> ChangeRole([FromBody]ChangeRole changeRole)
+        [HttpPost("generate_token/{id}")]
+        public async Task<IActionResult> GenerateToken(Guid id)
         {
-            await _userService.ChangeRoleAsync(changeRole.UserId, changeRole.Role);
+            await _userService.GenerateConfirmToken(id);
+            return Ok();
+        }
+        [HttpGet("validate_token/{id}/{token}")]
+        public async Task<IActionResult> ValidateToken(Guid id, string token)
+        {
+            await _userService.ValidateConfirmToken(id, token);
             return Ok();
         }
     }

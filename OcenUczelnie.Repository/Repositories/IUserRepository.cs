@@ -15,5 +15,6 @@ namespace OcenUczelnie.Core.Repositories
         Task<User> GetByEmailAsync(string email, bool getReviews = false, bool getOpinions = false);
         Task<User> GetByNameAsync(string name, bool getReviews = false, bool getOpinions = false);
         Task<IEnumerable<User>> BrowseAllAsync(bool getReviews = false, bool getOpinions = false);
+        Task ConfirmUser(Guid userId);
     }
 }

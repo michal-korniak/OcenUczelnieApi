@@ -11,6 +11,7 @@ namespace OcenUczelnie.Core.Domain
         public string Password { get; set; }
         public string Salt { get; set; }
         public string Role { get; set; }
+        public bool IsConfirmed { get; set; }
 
         public ICollection<Review> Reviews { get; set; }
         public ICollection<ReviewUserApproved> ReviewUserApproved { get; set; }
@@ -24,6 +25,7 @@ namespace OcenUczelnie.Core.Domain
             Password = password;
             Salt = salt;
             Role = role;
+            IsConfirmed = false;
         }
         protected User()
         {

@@ -45,6 +45,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
             return users;
         }
 
+
         public async Task<User> GetByIdAsync(Guid id, bool getReviews = false, bool getOpinions = false)
         {
             var query = GetUserQuery(getReviews, getOpinions);
@@ -78,6 +79,13 @@ namespace OcenUczelnie.Infrastructure.Repositories
                     .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.Review)
                     .Include(c => c.ReviewUserDisapproved).ThenInclude(rua => rua.User);
             return query;
+        }
+
+        public async Task ConfirmUser(Guid userId)
+        {
+            var user = await GetByIdAsync(userId);
+            user.IsConfirmed = true;
+            await UpdateAsync(user);
         }
     }
 }

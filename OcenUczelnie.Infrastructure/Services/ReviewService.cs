@@ -50,7 +50,7 @@ namespace OcenUczelnie.Infrastructure.Services
 
         public async Task ApproveReviewAsync(Guid userId, Guid reviewId)
         {
-            var review = await _reviewRepository.GetByIdAsync(reviewId);
+            var review = await _reviewRepository.GetByIdAsync(reviewId,true);
             if (review.User.Id == userId)
                 throw new Exception("User cannot approve his own review.");
             var priorUserMark = _reviewOpinionRepository.GetUserOpinion(userId, reviewId);
@@ -68,7 +68,7 @@ namespace OcenUczelnie.Infrastructure.Services
 
         public async Task DisapproveReviewAsync(Guid userId, Guid reviewId)
         {
-            var review = await _reviewRepository.GetByIdAsync(reviewId);
+            var review = await _reviewRepository.GetByIdAsync(reviewId,true);
             if (review.User.Id == userId)
                 throw new Exception("User cannot disapprove his own review.");
             var priorUserMark = _reviewOpinionRepository.GetUserOpinion(userId, reviewId);

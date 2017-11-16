@@ -27,12 +27,14 @@ namespace OcenUczelnie.Infrastructure.EF
             userEntity.Property(u => u.Password).IsRequired();
             userEntity.Property(u => u.Salt).IsRequired();
             userEntity.Property(u => u.Role).IsRequired();
+            userEntity.Property(u => u.IsConfirmed).IsRequired();
 
 
             var reviewEntity = modelBuilder.Entity<Review>();
             reviewEntity.HasKey(r => r.Id);
             reviewEntity.Property(r => r.Rating).IsRequired();
             reviewEntity.Property(r => r.Content).IsRequired();
+            reviewEntity.Property(r => r.CreatedAt).IsRequired();
 
             var courseEntity = modelBuilder.Entity<Course>();
             courseEntity.HasKey(c => c.Id);

@@ -11,9 +11,10 @@ using System;
 namespace OcenUczelnie.Infrastructure.Migrations
 {
     [DbContext(typeof(OcenUczelnieContext))]
-    partial class OcenUczelnieContextModelSnapshot : ModelSnapshot
+    [Migration("20171114104245_changeReviewDomain")]
+    partial class changeReviewDomain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,8 +119,6 @@ namespace OcenUczelnie.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired();
-
-                    b.Property<bool>("IsConfirmed");
 
                     b.Property<string>("Name")
                         .IsRequired();

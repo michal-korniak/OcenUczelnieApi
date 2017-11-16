@@ -12,6 +12,7 @@ namespace OcenUczelnie.Core.Domain
             CourseId = courseId;
             Rating = rating;
             Content = content;
+            CreatedAt = DateTime.UtcNow;
         }
 
 
@@ -22,6 +23,7 @@ namespace OcenUczelnie.Core.Domain
         public Guid Id { get; set; }
         public int Rating { get; set; }
         public string Content { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public Guid UserId { get; set; }
         public User User { get; set; }
