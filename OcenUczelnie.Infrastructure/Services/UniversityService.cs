@@ -45,6 +45,7 @@ namespace OcenUczelnie.Infrastructure.Services
         public async Task<IEnumerable<UniversityDto>> BrowseAllAsync()
         {
             var universites =await _universityRepository.BrowseAllAsync();
+            universites = universites.OrderBy(u => u.Name);
             return _mapper.Map<IEnumerable<University>, IEnumerable<UniversityDto>>(universites);
         }
     }

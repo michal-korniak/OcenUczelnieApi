@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using OcenUczelnie.Core.Domain;
+using OcenUczelnie.Core.Domain.Exceptions;
 using OcenUczelnie.Core.Repositories;
 using OcenUczelnie.Infrastructure.DTO;
 using OcenUczelnie.Infrastructure.Services.Interfaces;
@@ -26,9 +27,10 @@ namespace OcenUczelnie.Infrastructure.Services
         public async Task PostReviewAsync(Guid userId, Guid courseId, int rating, string content)
         {
             if (rating < 1 || rating > 5)
-                throw new Exception("Rating should be in range from 1 to 5");
+                throw new OcenUczelnieException(ErrorCodes.InvalidReview,
+                    "Rating should be in range from 1 to 5");
             if (content == null || content.Length < 20)
-                throw new Exception("Content of review doesn't exist or has less than 20 characters.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidReview, "Content of review doesn't exist or has less than 20 characters.");
             var review = new Review(new Guid(), userId, courseId, rating, content);
             await _reviewRepository.AddAsync(review);
         }
@@ -37,7 +39,7 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var review = await _reviewRepository.GetByIdAsync(reviewId,true);
             if (userId != review.User.Id)
-                throw new Exception("This user is not an author of this review.");
+                throw new UnauthorizedAccessException();
             await _reviewOpinionRepository.RemoveAllOpinions(reviewId);
             await _reviewRepository.RemoveAsync(reviewId);
         }
@@ -52,10 +54,10 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var review = await _reviewRepository.GetByIdAsync(reviewId,true);
             if (review.User.Id == userId)
-                throw new Exception("User cannot approve his own review.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidAction, "User cannot approve his own review.");
             var priorUserMark = _reviewOpinionRepository.GetUserOpinion(userId, reviewId);
             if (priorUserMark == 1)
-                throw new Exception("User already approved this review.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidAction, "User already approved this review.");
             if (priorUserMark == -1)
                 await _reviewOpinionRepository.RemoveDisapproveAsync(userId, reviewId);
             await _reviewOpinionRepository.AddApproveAsync(userId, reviewId);
@@ -70,10 +72,10 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var review = await _reviewRepository.GetByIdAsync(reviewId,true);
             if (review.User.Id == userId)
-                throw new Exception("User cannot disapprove his own review.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidAction, "User cannot disapprove his own review.");
             var priorUserMark = _reviewOpinionRepository.GetUserOpinion(userId, reviewId);
             if (priorUserMark == -1)
-                throw new Exception("User already disapproved this review.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidAction, "User already disapproved this review.");
             if (priorUserMark == 1)
                 await _reviewOpinionRepository.RemoveApproveAsync(userId, reviewId);
             await _reviewOpinionRepository.AddDisapproveAsync(userId, reviewId);

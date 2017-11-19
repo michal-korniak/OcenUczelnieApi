@@ -10,9 +10,9 @@ namespace OcenUczelnie.Api.Controllers
     {
         public Guid GetCurrentUserId()
         {
-            Claim guidClaim = User.Claims.SingleOrDefault(x => x.Type.EndsWith("nameidentifier"));
+            var guidClaim = User.Claims.SingleOrDefault(x => x.Type.EndsWith("nameidentifier"));
             if(guidClaim==null)
-                throw new Exception("No one is logged in.");
+                throw new UnauthorizedAccessException();
             var id = Guid.Parse(guidClaim.Value);
             return id;
         }

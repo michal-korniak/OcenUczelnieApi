@@ -10,12 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OcenUczelnie.Api.Middleware;
 using OcenUczelnie.Infrastructure.EF;
 using OcenUczelnie.Infrastructure.Extensions;
 using OcenUczelnie.Infrastructure.IoC;
 using OcenUczelnie.Infrastructure.Mappers;
-using OcenUczelnie.Infrastructure.Middleware;
-using OcenUczelnie.Infrastructure.Services;
 using OcenUczelnie.Infrastructure.Services.Interfaces;
 using OcenUczelnie.Infrastructure.Settings;
 

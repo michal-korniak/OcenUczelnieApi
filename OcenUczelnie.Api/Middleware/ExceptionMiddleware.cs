@@ -3,8 +3,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using OcenUczelnie.Core.Domain.Exceptions;
 
-namespace OcenUczelnie.Infrastructure.Middleware
+namespace OcenUczelnie.Api.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -29,11 +30,23 @@ namespace OcenUczelnie.Infrastructure.Middleware
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError; // 500 if unexpected
+            int status;
+            if (typeof(Exception) == typeof(UnauthorizedAccessException))
+                status = (int) HttpStatusCode.Unauthorized;
+            else
+                status = (int) HttpStatusCode.InternalServerError;
 
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            var code = "error";
+            if (exception is OcenUczelnieException uczelnieException)
+                code = uczelnieException.Code;
+            var result = JsonConvert.SerializeObject(new
+            {
+                code=code,
+                message = exception.Message
+            });
+
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = status;
             return context.Response.WriteAsync(result);
         }
     }

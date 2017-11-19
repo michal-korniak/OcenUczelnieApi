@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using OcenUczelnie.Core.Domain;
+using OcenUczelnie.Core.Domain.Exceptions;
 using OcenUczelnie.Core.Repositories;
 using OcenUczelnie.Infrastructure.DTO;
 using OcenUczelnie.Infrastructure.Services.Interfaces;
@@ -52,9 +53,9 @@ namespace OcenUczelnie.Infrastructure.Services
         public async Task RegisterAsync(string email, string name, string password, string role)
         {
             if (await _userRepository.GetByEmailAsync(email) != null)
-                throw new Exception("User with this email already exist.");
+                throw new OcenUczelnieException(ErrorCodes.EmailOccupied,"User with this email already exist.");
             if (await _userRepository.GetByNameAsync(name) != null)
-                throw new Exception("User with this name already exist.");
+                throw new OcenUczelnieException(ErrorCodes.NameOccupied, "User with this name already exist.");
 
             var salt = _cryptoService.GenerateSalt();
             var hashPassword = ComputeHash(password, salt);
@@ -68,12 +69,13 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var user = await _userRepository.GetByEmailAsync(email);
             if (user == null)
-                throw new Exception("Invalid credentials");
+                throw new OcenUczelnieException(ErrorCodes.InvalidCredentials);
             var generatedHash = _cryptoService.Compute(password, user.Salt);
             if (!_cryptoService.Compare(generatedHash, user.Password))
-                throw new Exception("Invalid credentials");
-            if(!user.IsConfirmed)
-                throw new Exception("User is not activated.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidCredentials);
+            if (!user.IsConfirmed)
+                throw new OcenUczelnieException(ErrorCodes.NotActivated,
+                "User is not activated.");
             var token = _tokenProvider.CreateToken(user.Id, user.Role);
             _memoryCache.Set("generatedToken", token, TimeSpan.FromSeconds(5));
         }
@@ -105,9 +107,9 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var user = await _userRepository.GetByIdAsync(userId);
             if(user==null)
-                throw new Exception("User doesn't exist.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidUser,"User doesn't exist.");
             if (user.IsConfirmed)
-                throw new Exception("User is already activated.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidAction,"User is already activated.");
             var confirmToken = RandomString(8);
             var expiresTime = DateTime.UtcNow.AddHours(1);
             _memoryCache.Set($"confirm-{userId}", confirmToken, expiresTime);
@@ -120,9 +122,9 @@ namespace OcenUczelnie.Infrastructure.Services
         {
             var validToken = _memoryCache.Get<string>($"confirm-{userId}");
             if (validToken == null)
-                throw new Exception("Token is expired.");
+                throw new OcenUczelnieException(ErrorCodes.TokenExpired);
             if (validToken != token)
-                throw new Exception("Token is invalid.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidToken);
             await _userRepository.ConfirmUser(userId);
             _memoryCache.Remove($"confirm-{userId}");
         }
@@ -138,7 +140,8 @@ namespace OcenUczelnie.Infrastructure.Services
         private string ComputeHash(string password, string salt)
         {
             if (password.Length < 7)
-                throw new Exception("Password should contain at least six characters.");
+                throw new OcenUczelnieException(ErrorCodes.InvalidPassword,
+                    "Password should contain at least six characters.");
             return _cryptoService.Compute(password, salt);
         }
     }
