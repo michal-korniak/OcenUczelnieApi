@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /OcenUczelnie.Tests.EndToEnd
 /OcenUczelnie.Api/appsettings.json
+/OcenUczelnie.Api/googlecloudsettings.json

@@ -11,9 +11,10 @@ using System;
 namespace OcenUczelnie.Infrastructure.Migrations
 {
     [DbContext(typeof(OcenUczelnieContext))]
-    partial class OcenUczelnieContextModelSnapshot : ModelSnapshot
+    [Migration("20180211153706_added-university-shortcut")]
+    partial class addeduniversityshortcut
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,6 +106,8 @@ namespace OcenUczelnie.Infrastructure.Migrations
 
                     b.Property<string>("Place")
                         .IsRequired();
+
+                    b.Property<string>("Shortcut");
 
                     b.HasKey("Id");
 

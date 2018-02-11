@@ -44,7 +44,7 @@ namespace OcenUczelnie.Infrastructure.EF
             var univerEntity = modelBuilder.Entity<University>();
             univerEntity.HasKey(u => u.Id);
             univerEntity.Property(u => u.Name).IsRequired();
-            univerEntity.Property(u => u.Id).IsRequired();
+            univerEntity.Property(u => u.Shortcut).IsRequired(false);
             univerEntity.Property(u => u.Place).IsRequired();
             univerEntity.Property(u => u.ImagePath).IsRequired();
 

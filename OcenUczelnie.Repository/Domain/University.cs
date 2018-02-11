@@ -7,6 +7,7 @@ namespace OcenUczelnie.Core.Domain
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Shortcut { get; set; }
         public string Place { get; set; }
         public string ImagePath { get; set; }
 
@@ -16,10 +17,11 @@ namespace OcenUczelnie.Core.Domain
         {
             
         }
-        public University(Guid id, string name, string place, string imagePath)
+        public University(Guid id, string name, string shortcut, string place, string imagePath)
         {
             Id = id;
             Name = name;
+            Shortcut=shortcut;
             Place = place;
             ImagePath = imagePath;
         }

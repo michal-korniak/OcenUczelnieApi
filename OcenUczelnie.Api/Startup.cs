@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -35,15 +36,10 @@ namespace OcenUczelnie.Api
         {
             services.AddCors();
 
-            services.AddMvc()
-            .AddJsonOptions(options =>
-            {
-                options.SerializerSettings.Formatting = Formatting.Indented;
-            });
+            services.AddMvc();
             services.AddSingleton(AutoMapperConfig.Initialize());
             var connectionString = Configuration.GetSettings<SqlSettings>().ConnectionString;
-            services.AddDbContext<OcenUczelnieContext>(opt => opt.UseSqlServer(connectionString));
-            services.AddDbContext<OcenUczelnieContext>();
+            services.AddDbContext<OcenUczelnieContext>(opt => opt.UseSqlServer(connectionString, b=>b.MigrationsAssembly("OcenUczelnie.Api")));
             services.AddMemoryCache();
             var jwtSettings = Configuration.GetSettings<JwtSettings>();
             services.AddAuthentication(options =>
@@ -59,9 +55,7 @@ namespace OcenUczelnie.Api
                     ValidIssuer = jwtSettings.Issuer,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
                 };
-            });
-
-
+            }); 
             var builder = new ContainerBuilder();
             builder.Populate(services);
             builder.RegisterModule(new SettingsModule(Configuration));

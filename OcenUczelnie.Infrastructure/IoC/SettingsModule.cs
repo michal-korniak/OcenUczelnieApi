@@ -30,6 +30,10 @@ namespace OcenUczelnie.Infrastructure.IoC
             builder.RegisterInstance(_config.GetSettings<EmailSettings>())
                 .AsSelf()
                 .SingleInstance();
+            builder.RegisterInstance(_config.GetSettings<GoogleCloudSettings>())
+                .AsSelf()
+                .SingleInstance();
+
         }
     }
 }
