@@ -7,6 +7,7 @@ using OcenUczelnie.Infrastructure.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OcenUczelnie.Core.Domain.Exceptions;
 
 namespace OcenUczelnie.Infrastructure.Services {
     class UniversityService : IUniversityService {
@@ -21,8 +22,11 @@ namespace OcenUczelnie.Infrastructure.Services {
             _universityRepository = universityRepository;
         }
         public async Task AddAsync (string name, string shortcut, string place, string base64Image) {
+            var univeristy=await _universityRepository.GetByNameAsync(name);
+            if(univeristy!=null)
+                throw new OcenUczelnieException(ErrorCodes.NameOccupied);
             string imageUrl = await _storageService.UploadImageAndReturnUrlAsync (base64Image, name);
-            var univeristy = new University (Guid.NewGuid (), name, shortcut, place, imageUrl);
+            univeristy = new University (Guid.NewGuid (), name, shortcut, place, imageUrl);
             await _universityRepository.AddAsync (univeristy);
         }
 

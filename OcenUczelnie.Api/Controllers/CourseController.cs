@@ -15,7 +15,7 @@ namespace OcenUczelnie.Api.Controllers
 
         public CourseController(ICourseService courseService, IReviewService reviewService)
         {
-            _courseService = courseService;
+            _courseService = courseService; 
             _reviewService = reviewService;
         }
         [HttpGet("{id}/reviews")]

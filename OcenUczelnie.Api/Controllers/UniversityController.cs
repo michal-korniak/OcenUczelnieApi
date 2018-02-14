@@ -38,5 +38,6 @@ namespace OcenUczelnie.Api.Controllers {
             await _universityService.AddAsync (command.Name, command.Shortcut, command.Place, command.Base64Image);
             return Ok ();
         }
+        
     }
 }

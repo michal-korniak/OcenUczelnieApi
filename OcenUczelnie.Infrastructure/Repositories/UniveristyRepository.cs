@@ -52,6 +52,11 @@ namespace OcenUczelnie.Infrastructure.Repositories
             var query = GetUniversityQuery(getCourses);
             return await query.SingleOrDefaultAsync(u => u.Id == id);
         }
+        public async Task<University> GetByNameAsync(string name, bool getCourses = false)
+        {
+            var query = GetUniversityQuery(getCourses);
+            return await query.SingleOrDefaultAsync(u => u.Name == name);
+        }
 
         public async Task<IEnumerable<University>> BrowseAllAsync(bool getCourses = false)
         {
@@ -66,5 +71,7 @@ namespace OcenUczelnie.Infrastructure.Repositories
                 query = query.Include(u => u.Courses);
             return query;
         }
+
+
     }
 }
