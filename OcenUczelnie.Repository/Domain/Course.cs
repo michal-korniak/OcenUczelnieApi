@@ -12,6 +12,15 @@ namespace OcenUczelnie.Core.Domain
         public University University { get; set; }
         public ICollection<Review> Reviews { get; set; }
 
+        protected Course(){}
+
+        public Course(Guid id,string name, string department)
+        {
+            Id=id;
+            Name=name;
+            Department=department;
+        }
+
 
     }
 }

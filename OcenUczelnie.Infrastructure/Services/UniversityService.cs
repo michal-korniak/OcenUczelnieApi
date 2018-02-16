@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OcenUczelnie.Core.Domain.Exceptions;
+using OcenUczelnie.Infrastructure.Command;
 
 namespace OcenUczelnie.Infrastructure.Services {
     class UniversityService : IUniversityService {
@@ -47,6 +48,39 @@ namespace OcenUczelnie.Infrastructure.Services {
             var universites = await _universityRepository.BrowseAllAsync ();
             universites = universites.OrderBy (u => u.Name);
             return _mapper.Map<IEnumerable<University>, IEnumerable<UniversityDto>> (universites);
+        }
+
+        public async Task UpdateCoursesAsync(Guid id, ICollection<UpdateCourses.Course> newCourses)
+        {
+            var univeristy=await _universityRepository.GetByIdAsync(id,true);
+            List<Course> coursesToRemove=new List<Course>();
+            foreach(var oldCourse in univeristy.Courses)
+            {
+                if(newCourses.SingleOrDefault(n=>n.Id==oldCourse.Id)==null)
+                {
+                    coursesToRemove.Add(oldCourse);
+                }
+            }
+            foreach(var course in coursesToRemove)
+            {
+                univeristy.Courses.Remove(course);
+            }
+            foreach(var newCourse in newCourses)
+            {
+                if(newCourse.Id!=null)
+                {
+                    var courseToUpdate=univeristy.Courses.SingleOrDefault(c=>c.Id==newCourse.Id);
+                    if(courseToUpdate!=null)
+                    {
+                        courseToUpdate.Name=newCourse.Name;
+                        courseToUpdate.Department=newCourse.Department;
+                        continue;
+                    }
+                }
+                var course=new Course(Guid.NewGuid(),newCourse.Name,newCourse.Department);
+                univeristy.Courses.Add(course);
+            }
+            await _universityRepository.UpdateAsync(univeristy);
         }
     }
 }

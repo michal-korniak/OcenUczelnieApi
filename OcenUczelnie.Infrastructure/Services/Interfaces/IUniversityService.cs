@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OcenUczelnie.Infrastructure.Command;
 using OcenUczelnie.Infrastructure.DTO;
 
 namespace OcenUczelnie.Infrastructure.Services.Interfaces
@@ -11,5 +12,6 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
         Task<UniversityDto> GetAsync(Guid id);
         Task<UniversityDetailsDto> GetDetailsAsync(Guid id);
         Task<IEnumerable<UniversityDto>> BrowseAllAsync();
+        Task UpdateCoursesAsync(Guid id, ICollection<UpdateCourses.Course> courses);
     }
 }
