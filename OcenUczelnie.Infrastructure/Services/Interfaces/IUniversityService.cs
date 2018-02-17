@@ -13,5 +13,7 @@ namespace OcenUczelnie.Infrastructure.Services.Interfaces
         Task<UniversityDetailsDto> GetDetailsAsync(Guid id);
         Task<IEnumerable<UniversityDto>> BrowseAllAsync();
         Task UpdateCoursesAsync(Guid id, ICollection<UpdateCourses.Course> courses);
+        Task UpdateUniversityAsync(Guid id, string name, string shortcut, string place, string base64Image);
+        Task DeleteUniversityAsync(Guid id);
     }
 }

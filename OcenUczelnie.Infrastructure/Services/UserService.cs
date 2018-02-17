@@ -115,7 +115,7 @@ namespace OcenUczelnie.Infrastructure.Services
             _memoryCache.Set($"confirm-{userId}", confirmToken, expiresTime);
 
             await _emailSender.SendEmailAsync(user.Email, "Link potwierdzający [OcenUczelnie.pl]",
-                $"Twój kod potwierdzający to: \"{confirmToken}\".\nKod jest wazny do {expiresTime:g}");
+                $"Twój kod potwierdzający to: \"{confirmToken}\".\nKod jest wazny do {expiresTime.ToLocalTime():g}");
         }
 
         public async Task ValidateConfirmToken(Guid userId, string token)

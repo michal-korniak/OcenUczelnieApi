@@ -82,5 +82,24 @@ namespace OcenUczelnie.Infrastructure.Services {
             }
             await _universityRepository.UpdateAsync(univeristy);
         }
+
+        public async Task UpdateUniversityAsync(Guid id, string name, string shortcut, string place, string base64Image)
+        {
+            var univeristy=await _universityRepository.GetByIdAsync(id);
+            univeristy.Name=name;
+            univeristy.Shortcut=shortcut;
+            univeristy.Place=place;
+            if(base64Image!=null)
+            {
+                string imageUrl = await _storageService.UploadImageAndReturnUrlAsync (base64Image, name);
+                univeristy.ImagePath=imageUrl;
+            }
+            await _universityRepository.UpdateAsync(univeristy);
+        }
+
+        public async Task DeleteUniversityAsync(Guid id)
+        {
+            await _universityRepository.RemoveAsync(id);
+        }
     }
 }
